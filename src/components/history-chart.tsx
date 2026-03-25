@@ -123,8 +123,11 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
               boxShadow: "0 12px 40px rgba(20, 27, 43, 0.12)",
               padding: "8px 12px",
             }}
-            formatter={(value: number) =>
-              isPercentage ? `${value.toFixed(2)}%` : `$${value.toLocaleString()}`
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            formatter={(value: any) =>
+              typeof value === "number"
+                ? isPercentage ? `${value.toFixed(2)}%` : `$${value.toLocaleString()}`
+                : String(value ?? "")
             }
             labelFormatter={(_, payload) =>
               payload[0]?.payload?.fullDate ?? ""

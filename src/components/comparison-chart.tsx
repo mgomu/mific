@@ -125,9 +125,12 @@ export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
               borderRadius: 8,
               boxShadow: "0 12px 40px rgba(20, 27, 43, 0.12)",
             }}
-            formatter={(value: number, name: string) => [
-              isPercentage ? `${value.toFixed(2)}%` : `$${value.toLocaleString()}`,
-              fundNames.get(name) ?? name,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            formatter={(value: any, name: any) => [
+              typeof value === "number"
+                ? isPercentage ? `${value.toFixed(2)}%` : `$${value.toLocaleString()}`
+                : String(value ?? ""),
+              fundNames.get(String(name)) ?? String(name),
             ]}
           />
           {codigos.map((codigo, i) => (
