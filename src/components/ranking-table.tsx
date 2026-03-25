@@ -83,13 +83,13 @@ export function RankingTable({
               <SortHeader label="Rent. anual" field="rentabilidadAnual" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" isDefault={sortField === "rentabilidadAnual"} />
             </tr>
           </thead>
-          <tbody className="divide-y divide-surface-container-low">
+          <tbody>
             {funds.map((fund, index) => {
               const isSelected = selectedIds.includes(fund.codigoNegocio);
               return (
                 <tr
                   key={fund.codigoNegocio}
-                  className="hover:bg-surface-container-low transition-colors cursor-pointer group"
+                  className={`hover:bg-surface-container-low transition-colors cursor-pointer group ${index % 2 === 0 ? "bg-surface-container-lowest" : "bg-surface"}`}
                 >
                   <td className="px-6 py-4 text-center" onClick={(e) => e.stopPropagation()}>
                     <input
@@ -105,7 +105,7 @@ export function RankingTable({
                   </td>
                   <td className="px-6 py-4">
                     <Link href={`/fondo/${fund.codigoNegocio}`} className="flex flex-col">
-                      <span className="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">
+                      <span className="text-sm font-bold font-display text-on-surface group-hover:text-primary transition-colors">
                         {fund.nombrePatrimonio}
                       </span>
                       <span className="text-xs text-on-surface-variant">
