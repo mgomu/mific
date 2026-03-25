@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Manrope } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const manrope = Manrope({ subsets: ["latin"], variable: "--font-display", weight: ["700", "800"] });
 
 export const metadata: Metadata = {
   title: "MiFIC — Fondos de Inversión Colectiva en Colombia",
@@ -24,7 +23,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={`${inter.variable} ${manrope.variable} ${inter.className}`}>{children}</body>
+      <body className={`${inter.variable} ${inter.className}`}>{children}</body>
     </html>
   );
 }
