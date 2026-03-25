@@ -19,7 +19,7 @@ export function MetricCard({
 }) {
   return (
     <div
-      className={`bg-surface-container-lowest rounded-xl p-6 shadow-sm hover:shadow-ambient-hover transition-shadow ${
+      className={`bg-surface-container-lowest rounded-xl p-6 shadow-ambient hover:shadow-ambient-hover transition-shadow ${
         borderColor ? `border-l-4 ${borderColor}` : ""
       }`}
     >
@@ -29,11 +29,11 @@ export function MetricCard({
       {isProfitability && numericValue !== undefined ? (
         <div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-secondary tabular-nums">
+            <span className="text-3xl font-bold text-tertiary tabular-nums">
               {Math.abs(numericValue).toFixed(2)}%
             </span>
             {suffix && (
-              <span className="text-xs font-bold text-secondary">{suffix}</span>
+              <span className="text-xs font-bold text-tertiary">{suffix}</span>
             )}
           </div>
           <div className="mt-1">
