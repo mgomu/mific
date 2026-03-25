@@ -54,14 +54,18 @@ export function Header({
               Explorar
             </Link>
           </nav>
-          {compareCount > 0 && (
-            <Link
-              href={compareUrl}
-              className="bg-gradient-to-r from-primary to-primary-container text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg shadow-primary/20 active:scale-95 transition-transform"
-            >
-              Comparar ({compareCount})
-            </Link>
-          )}
+          <Link
+            href={compareCount >= 2 ? compareUrl : "#"}
+            className={`inline-flex items-center gap-2 px-6 py-2 rounded-full text-sm font-semibold transition-all ${
+              compareCount >= 2
+                ? "bg-gradient-to-r from-primary to-primary-container text-white shadow-lg shadow-primary/20 active:scale-95"
+                : "bg-surface-container-high text-on-surface-variant"
+            }`}
+            aria-disabled={compareCount < 2}
+          >
+            <span className="material-symbols-outlined text-base">compare_arrows</span>
+            Comparar ({compareCount})
+          </Link>
         </div>
       </div>
     </header>
