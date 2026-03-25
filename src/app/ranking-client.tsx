@@ -12,10 +12,8 @@ const PAGE_SIZE = 50;
 
 export function RankingClient({
   funds,
-  fechaCorte,
 }: {
   funds: FundRecord[];
-  fechaCorte?: string;
 }) {
   const [search, setSearch] = useState("");
   const [subtipo, setSubtipo] = useState("");
@@ -100,32 +98,9 @@ export function RankingClient({
     })
     .filter(Boolean) as { id: string; name: string }[];
 
-  // Compute top performing subtype
-  const topType = useMemo(() => {
-    const typeAvg = new Map<string, { sum: number; count: number }>();
-    for (const f of funds) {
-      const entry = typeAvg.get(f.nombreSubtipoPatrimonio) ?? { sum: 0, count: 0 };
-      entry.sum += f.rentabilidadAnual;
-      entry.count += 1;
-      typeAvg.set(f.nombreSubtipoPatrimonio, entry);
-    }
-    let best = "";
-    let bestAvg = -Infinity;
-    for (const [name, { sum, count }] of typeAvg) {
-      const avg = sum / count;
-      if (avg > bestAvg) {
-        bestAvg = avg;
-        best = name;
-      }
-    }
-    return { name: best, avg: bestAvg };
-  }, [funds]);
-
   return (
     <>
       <Header
-        compareCount={selectedIds.length}
-        compareIds={selectedIds}
         searchValue={search}
         onSearchChange={setSearch}
       />
@@ -139,9 +114,14 @@ export function RankingClient({
 
         <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
 
-
           {/* Table Card */}
           <div className="bg-surface-container-lowest rounded-xl shadow-ambient overflow-hidden mb-8">
+
+            <div className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <h3 className="font-bold text-primary font-headline">Ranking de Fondos</h3>
+              </div>
+            </div>
 
             {sorted.length === 0 ? (
               <div className="text-center py-20">
@@ -170,12 +150,12 @@ export function RankingClient({
                 />
 
                 {visibleCount < sorted.length && (
-                  <div className="p-4 bg-surface-container-low/30 flex items-center justify-center">
+                  <div className="p-6 flex items-center justify-center">
                     <button
                       onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-                      className="rounded-full border border-primary/20 hover:bg-primary-fixed/30 text-xs font-bold text-primary hover:text-primary-container px-6 py-2 transition-all"
+                      className="text-sm font-bold text-primary hover:text-primary-container hover:underline transition-all"
                     >
-                      Cargar Más Fondos
+                      Load More Funds
                     </button>
                   </div>
                 )}

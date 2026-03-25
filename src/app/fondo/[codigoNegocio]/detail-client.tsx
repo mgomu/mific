@@ -1,18 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import type { FundRecord } from "@/lib/types";
 import { Header } from "@/components/header";
 import { HistoryChart } from "@/components/history-chart";
-import { formatCOP, formatNumber, formatCompactCOP, formatDate, toSentenceCase } from "@/lib/format";
+import { formatNumber, formatCompactCOP, formatDate, formatCOP, toSentenceCase } from "@/lib/format";
 
 export function DetailClient({ history }: { history: FundRecord[] }) {
+  const [compareOpen, setCompareOpen] = useState(false);
   const latest = history[history.length - 1];
-
-  const values = history.map((h) => h.valorUnidad).filter((v) => v > 0);
-  const minVal = values.length ? Math.min(...values) : 0;
-  const maxVal = values.length ? Math.max(...values) : 0;
-  const avgVal = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
 
   return (
     <>
@@ -28,12 +25,9 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
               <span className="material-symbols-outlined text-sm">arrow_back</span>
               <span className="text-sm font-medium">Volver a fondos</span>
             </Link>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-primary font-display">
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-primary font-headline">
               {toSentenceCase(latest.nombrePatrimonio)}
             </h1>
-            <p className="text-xl text-on-surface-variant font-medium">
-              {toSentenceCase(latest.nombreEntidad)}
-            </p>
           </div>
           <div className="flex gap-3">
             <Link
@@ -43,7 +37,7 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
               <span className="material-symbols-outlined">add_circle</span>
               Agregar a comparación
             </Link>
-            <button className="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:opacity-90 transition-all flex items-center gap-2">
+            <button className="text-white px-8 py-3 rounded-lg font-bold hover:opacity-90 transition-all flex items-center gap-2" style={{ background: "linear-gradient(135deg, #00164e, #00236f)" }}>
               <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
                 account_balance_wallet
               </span>
@@ -54,7 +48,7 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
 
         {/* 4 Metric Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-primary">
+          <div className="bg-surface-container-lowest p-6 rounded-xl">
             <p className="text-sm font-semibold text-on-surface-variant mb-4 uppercase tracking-wider">
               Valor de la unidad
             </p>
@@ -72,7 +66,7 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
             </p>
           </div>
 
-          <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-secondary">
+          <div className="bg-surface-container-lowest p-6 rounded-xl">
             <p className="text-sm font-semibold text-on-surface-variant mb-4 uppercase tracking-wider">
               Rentabilidad Anual
             </p>
@@ -87,7 +81,7 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
             </p>
           </div>
 
-          <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+          <div className="bg-surface-container-lowest p-6 rounded-xl">
             <p className="text-sm font-semibold text-on-surface-variant mb-4 uppercase tracking-wider">
               Valor total del fondo
             </p>
@@ -102,7 +96,7 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
             </p>
           </div>
 
-          <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+          <div className="bg-surface-container-lowest p-6 rounded-xl">
             <p className="text-sm font-semibold text-on-surface-variant mb-4 uppercase tracking-wider">
               N° de inversionistas
             </p>
@@ -122,21 +116,6 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           <div className="lg:col-span-2">
             <HistoryChart data={history} />
-            {/* Min/Avg/Max Stats */}
-            <div className="grid grid-cols-3 gap-4 mt-4 bg-surface-container-lowest rounded-xl p-4 shadow-sm">
-              <div className="text-center">
-                <p className="text-[10px] font-bold text-on-surface-variant uppercase">Mínimo (1A)</p>
-                <p className="text-sm font-bold tabular-nums">{formatCOP(minVal)}</p>
-              </div>
-              <div className="text-center border-x border-outline-variant/20">
-                <p className="text-[10px] font-bold text-on-surface-variant uppercase">Promedio</p>
-                <p className="text-sm font-bold tabular-nums">{formatCOP(avgVal)}</p>
-              </div>
-              <div className="text-center">
-                <p className="text-[10px] font-bold text-on-surface-variant uppercase">Máximo (1A)</p>
-                <p className="text-sm font-bold tabular-nums">{formatCOP(maxVal)}</p>
-              </div>
-            </div>
           </div>
 
           {/* Sidebar */}
@@ -169,33 +148,47 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
         </div>
       </main>
 
-      {/* Comparison Float Bar */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl bg-surface-container-lowest/80 backdrop-blur-xl border border-primary-fixed/20 py-4 px-6 rounded-2xl shadow-2xl flex items-center justify-between z-40">
-        <div className="flex items-center gap-4">
-          <div className="flex -space-x-3">
-            <div className="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center font-bold border-2 border-white text-xs">
-              {latest.nombrePatrimonio.slice(0, 2).toUpperCase()}
+      {/* Floating Compare Button + Expandable Panel */}
+      <div className="fixed bottom-8 right-8 z-40 flex flex-col items-end gap-3">
+        {compareOpen && (
+          <div className="backdrop-blur-xl border py-4 px-6 rounded-2xl shadow-2xl w-[340px]" style={{ backgroundColor: "rgba(255,255,255,0.9)", borderColor: "rgba(220,225,255,0.3)" }}>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="flex -space-x-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 border-white text-xs" style={{ backgroundColor: "#006a61", color: "#ffffff" }}>
+                  {latest.nombrePatrimonio.slice(0, 2).toUpperCase()}
+                </div>
+                <div className="w-10 h-10 rounded-full border-2 border-dashed flex items-center justify-center" style={{ backgroundColor: "#e6e8ea", borderColor: "#c5c5d3", color: "#444651" }}>
+                  <span className="material-symbols-outlined text-sm">add</span>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-bold" style={{ color: "#00236f" }}>Comparar fondos</p>
+                <p className="text-[10px]" style={{ color: "#444651" }}>Selecciona fondos para comparar</p>
+              </div>
             </div>
-            <div className="w-10 h-10 rounded-full bg-surface-container-high border-2 border-dashed border-outline-variant flex items-center justify-center text-on-surface-variant">
-              <span className="material-symbols-outlined text-sm">add</span>
-            </div>
+            <Link
+              href={`/comparar?ids=${latest.codigoNegocio}`}
+              className="w-full py-2.5 rounded-lg text-xs font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2"
+              style={{ backgroundColor: "#00236f", color: "#ffffff" }}
+            >
+              <span className="material-symbols-outlined text-sm">compare_arrows</span>
+              Comparar ahora
+            </Link>
           </div>
-          <div className="hidden sm:block">
-            <p className="text-xs font-bold text-primary">Comparando fondos</p>
-            <p className="text-[10px] text-on-surface-variant">Selecciona un fondo más para comparar</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-bold text-on-surface-variant hover:text-error transition-colors cursor-pointer">
-            Limpiar
+        )}
+        <button
+          onClick={() => setCompareOpen(!compareOpen)}
+          className="w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:shadow-xl hover:scale-105"
+          style={{
+            backgroundColor: compareOpen ? "#e6e8ea" : "#00236f",
+            color: compareOpen ? "#191c1e" : "#ffffff",
+            transform: compareOpen ? "rotate(45deg)" : undefined,
+          }}
+        >
+          <span className="material-symbols-outlined text-2xl">
+            {compareOpen ? "close" : "compare_arrows"}
           </span>
-          <Link
-            href={`/comparar?ids=${latest.codigoNegocio}`}
-            className="bg-primary text-white px-5 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-all"
-          >
-            Comparar ahora
-          </Link>
-        </div>
+        </button>
       </div>
 
     </>

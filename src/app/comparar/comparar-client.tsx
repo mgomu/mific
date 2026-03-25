@@ -155,7 +155,7 @@ export function CompararClient() {
       <main className="pt-24 pb-20 px-6 max-w-screen-2xl mx-auto min-h-screen">
         {/* Header Section */}
         <header className="mb-10">
-          <h1 className="text-4xl font-extrabold text-primary tracking-tight mb-2">
+          <h1 className="text-4xl font-extrabold text-primary tracking-tight mb-2 font-headline">
             Comparación de Fondos
           </h1>
           <p className="text-on-surface-variant font-medium">
@@ -193,7 +193,7 @@ export function CompararClient() {
             {/* Right Column: Selected Funds */}
             <div className="lg:col-span-3 space-y-6">
               <div className="bg-surface-container-lowest rounded-xl p-6 h-full shadow-ambient">
-                <h2 className="text-lg font-bold text-primary mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-bold text-primary mb-4 flex items-center justify-between font-headline">
                   Fondos Seleccionados
                   <span className="bg-primary-fixed text-primary px-2 py-0.5 rounded text-xs">
                     {ids.length}/5
@@ -256,7 +256,7 @@ export function CompararClient() {
       {/* Comparison Float Bar */}
       {ids.length >= 2 && !loading && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-2xl z-40 px-6">
-          <div className="bg-surface-container-lowest/90 backdrop-blur-md rounded-2xl p-4 shadow-ambient border border-primary-fixed/20 flex items-center justify-between">
+          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-4 shadow-ambient border border-primary-fixed/20 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex -space-x-3">
                 {ids.map((id, i) => (

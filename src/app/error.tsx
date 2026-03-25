@@ -12,7 +12,7 @@ export default function Error({
         <span className="material-symbols-outlined text-6xl text-on-surface-variant/40 mb-4">
           warning
         </span>
-        <h1 className="text-xl font-bold text-on-surface mb-2">
+        <h1 className="text-xl font-bold text-on-surface mb-2 font-headline">
           No pudimos cargar los datos
         </h1>
         <p className="text-sm text-on-surface-variant mb-6 max-w-md">

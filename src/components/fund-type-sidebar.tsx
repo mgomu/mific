@@ -37,7 +37,7 @@ export function FundTypeSidebar({
   return (
     <aside className="h-screen w-64 sticky top-16 left-0 bg-surface-container-low flex-col gap-y-2 p-4 hidden lg:flex">
       <div className="px-2 mb-4">
-        <h3 className="font-bold text-lg text-primary">Filtros</h3>
+        <h3 className="font-headline font-bold text-lg text-primary">Filtros</h3>
         <p className="text-xs text-on-surface-variant">Refina tu búsqueda</p>
       </div>
 
@@ -46,7 +46,7 @@ export function FundTypeSidebar({
           onClick={() => onItemChange("")}
           className={`w-full text-left rounded-lg p-3 flex items-center gap-3 cursor-pointer transition-all ${
             selectedItem === ""
-              ? "bg-surface-container-lowest text-primary shadow-ambient font-bold border-l-2 border-primary"
+              ? "bg-surface-container-lowest text-primary shadow-ambient font-bold"
               : "text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1"
           }`}
         >
@@ -60,7 +60,7 @@ export function FundTypeSidebar({
             onClick={() => onItemChange(item)}
             className={`w-full text-left rounded-lg p-3 flex items-center gap-3 cursor-pointer transition-all ${
               selectedItem === item
-                ? "bg-surface-container-lowest text-primary shadow-ambient font-bold border-l-2 border-primary"
+                ? "bg-surface-container-lowest text-primary shadow-ambient font-bold"
                 : "text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1"
             }`}
           >

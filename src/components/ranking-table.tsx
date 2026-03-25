@@ -126,35 +126,49 @@ function AdminFilterHeader({
       )}
 
       {open && (
-        <div className="absolute top-full left-0 mt-1 z-50 bg-surface-container-lowest rounded-xl shadow-ambient border border-outline-variant/20 w-72 overflow-hidden">
-          <div className="p-2 border-b border-surface-container-low">
-            <input
-              type="text"
-              placeholder="Buscar administradora..."
-              value={filterSearch}
-              onChange={(e) => setFilterSearch(e.target.value)}
-              className="w-full text-sm px-3 py-2 rounded-lg bg-surface-container-low outline-none placeholder:text-on-surface-variant/40"
-              autoFocus
-            />
+        <div className="absolute top-full left-0 mt-2 z-50 bg-surface-container-lowest rounded-2xl shadow-ambient-hover border border-outline-variant/10 w-72 overflow-hidden">
+          <div className="p-3">
+            <div className="relative">
+              <span className="material-symbols-outlined text-sm text-on-surface-variant/40 absolute left-3 top-1/2 -translate-y-1/2">
+                search
+              </span>
+              <input
+                type="text"
+                placeholder="Buscar administradora..."
+                value={filterSearch}
+                onChange={(e) => setFilterSearch(e.target.value)}
+                className="w-full text-xs px-3 pl-9 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant/10 outline-none placeholder:text-on-surface-variant/40 text-on-surface focus:border-primary/30 transition-colors"
+                autoFocus
+              />
+            </div>
           </div>
-          <div className="max-h-64 overflow-y-auto">
+          <div className="max-h-60 overflow-y-auto px-2 pb-2">
             {filtered.map((admin) => {
               const isChecked = selected.includes(admin);
               return (
                 <button
                   key={admin}
                   onClick={() => toggle(admin)}
-                  className={`w-full text-left px-4 py-2.5 text-sm hover:bg-surface-container-low transition-colors flex items-center gap-2 ${
-                    isChecked ? "text-primary font-bold" : "text-on-surface"
+                  className={`w-full text-left px-3 py-2.5 text-xs rounded-xl transition-colors flex items-center gap-2.5 ${
+                    isChecked
+                      ? "bg-primary-fixed/40 text-primary font-semibold"
+                      : "text-on-surface hover:bg-surface-container-low"
                   }`}
                 >
-                  <input
-                    type="checkbox"
-                    checked={isChecked}
-                    readOnly
-                    className="rounded border-outline-variant text-primary focus:ring-primary pointer-events-none"
-                  />
-                  <div className="w-5 h-5 bg-surface-container-high rounded-full flex-shrink-0 flex items-center justify-center text-[7px] font-bold text-on-surface-variant">
+                  <div className={`w-4 h-4 rounded flex-shrink-0 flex items-center justify-center border transition-colors ${
+                    isChecked
+                      ? "bg-primary border-primary"
+                      : "border-outline-variant/40 bg-surface-container-lowest"
+                  }`}>
+                    {isChecked && (
+                      <span className="material-symbols-outlined text-on-primary text-[11px]">check</span>
+                    )}
+                  </div>
+                  <div className={`w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-[7px] font-bold ${
+                    isChecked
+                      ? "bg-primary/10 text-primary"
+                      : "bg-surface-container-high text-on-surface-variant/60"
+                  }`}>
                     {admin.slice(0, 2).toUpperCase()}
                   </div>
                   <span className="truncate">{toSentenceCase(admin)}</span>
@@ -162,14 +176,14 @@ function AdminFilterHeader({
               );
             })}
             {filtered.length === 0 && (
-              <p className="px-4 py-3 text-sm text-on-surface-variant/60">Sin resultados</p>
+              <p className="px-3 py-4 text-xs text-on-surface-variant/50 text-center">Sin resultados</p>
             )}
           </div>
           {hasFilter && (
-            <div className="p-2 border-t border-surface-container-low">
+            <div className="px-3 pb-3">
               <button
                 onClick={() => { onChange([]); setOpen(false); setFilterSearch(""); }}
-                className="w-full text-center text-xs font-semibold text-primary hover:underline py-1"
+                className="w-full text-center text-xs font-semibold text-on-surface-variant/60 hover:text-error py-2 rounded-xl hover:bg-error/5 transition-colors"
               >
                 Limpiar filtros
               </button>
@@ -194,9 +208,9 @@ export function RankingTable({
 }: RankingTableProps) {
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-left border-collapse">
+      <table className="w-full text-left border-separate border-spacing-y-2">
         <thead>
-          <tr className="bg-surface-container-low">
+          <tr>
             <th className="px-4 py-4 w-12">
               <span className="sr-only">Select</span>
             </th>
@@ -220,11 +234,9 @@ export function RankingTable({
             return (
               <tr
                 key={fund.codigoNegocio}
-                className={`hover:bg-surface-container-low/60 transition-colors cursor-pointer group ${
-                  idx % 2 === 0 ? "bg-surface-container-lowest" : "bg-surface"
-                }`}
+                className="bg-surface-container-lowest hover:shadow-ambient transition-all cursor-pointer group"
               >
-                <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
+                <td className="px-4 py-5 rounded-l-xl" onClick={(e) => e.stopPropagation()}>
                   <input
                     type="checkbox"
                     checked={isSelected}
@@ -233,32 +245,30 @@ export function RankingTable({
                     aria-label={`Seleccionar ${fund.nombrePatrimonio}`}
                   />
                 </td>
-                <td className="px-4 py-4">
+                <td className="px-4 py-5">
                   <Link href={`/fondo/${fund.codigoNegocio}`} className="flex flex-col">
                     <span className="text-sm font-bold text-primary group-hover:text-primary-container transition-colors">
                       {toSentenceCase(fund.nombrePatrimonio)}
                     </span>
+                    <span className="text-[11px] text-on-surface-variant/60 mt-0.5">
+                      {toSentenceCase(fund.nombreSubtipoPatrimonio)}
+                    </span>
                   </Link>
                 </td>
-                <td className="px-4 py-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-surface-container-high rounded-full flex-shrink-0 flex items-center justify-center text-[8px] font-bold text-on-surface-variant">
-                      {fund.nombreEntidad.slice(0, 2).toUpperCase()}
-                    </div>
-                    <span className="text-sm font-medium text-on-surface">
-                      {toSentenceCase(fund.nombreEntidad)}
-                    </span>
-                  </div>
+                <td className="px-4 py-5">
+                  <span className="text-sm font-medium text-on-surface">
+                    {toSentenceCase(fund.nombreEntidad)}
+                  </span>
                 </td>
-                <td className="px-4 py-4">
+                <td className="px-4 py-5">
                   <FundTypeBadge type={fund.nombreSubtipoPatrimonio} />
                 </td>
-                <td className="px-4 py-4 text-right text-sm tabular-nums text-on-surface-variant font-mono">
+                <td className="px-4 py-5 text-right text-sm tabular-nums text-on-surface-variant font-mono">
                   {formatCOP(fund.valorUnidad)}
                 </td>
-                <td className="px-4 py-4 text-right">
+                <td className="px-4 py-5 text-right rounded-r-xl">
                   <span className={`font-bold flex items-center gap-1 justify-end ${
-                    fund.rentabilidadAnual >= 0 ? "text-tertiary" : "text-error"
+                    fund.rentabilidadAnual >= 0 ? "text-secondary" : "text-error"
                   }`}>
                     <span className="material-symbols-outlined text-sm">
                       {fund.rentabilidadAnual >= 0 ? "trending_up" : "trending_down"}

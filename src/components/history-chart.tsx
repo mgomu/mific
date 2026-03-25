@@ -11,16 +11,14 @@ import {
   AreaChart,
 } from "recharts";
 import type { FundRecord } from "@/lib/types";
-import { formatShortDate } from "@/lib/format";
+import { formatShortDate, formatCOP } from "@/lib/format";
 
-type Metric = "rentabilidadAnual" | "rentabilidadMensual" | "rentabilidadSemestral" | "valorUnidad";
+type Metric = "valorUnidad" | "rentabilidadAnual";
 type Period = "1M" | "3M" | "6M" | "1A" | "Todo";
 
 const METRIC_LABELS: Record<Metric, string> = {
-  rentabilidadAnual: "Rent. anual",
-  rentabilidadMensual: "Rent. mensual",
-  rentabilidadSemestral: "Rent. semestral",
-  valorUnidad: "Valor de la unidad",
+  valorUnidad: "Valor de Unidad",
+  rentabilidadAnual: "Rentabilidad E.A.",
 };
 
 const PERIOD_DAYS: Record<Period, number | null> = {
@@ -96,23 +94,40 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
   const isPercentage = metric !== "valorUnidad";
 
   return (
-    <div className="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-xl font-bold text-primary font-display">
-          Evolución Histórica
-        </h2>
-        <div className="flex bg-surface-container p-1 rounded-lg">
-          {(Object.keys(PERIOD_DAYS) as Period[]).map((p) => (
+    <div className="bg-surface-container-lowest rounded-xl p-8 shadow-ambient">
+      <div className="flex flex-col gap-4 mb-8">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-bold text-primary font-headline">
+            Evolución Histórica
+          </h2>
+          <div className="flex bg-surface-container p-1 rounded-lg">
+            {(Object.keys(PERIOD_DAYS) as Period[]).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPeriod(p)}
+                className={`px-3 py-1 text-xs font-bold rounded transition-colors ${
+                  period === p
+                    ? "bg-white text-primary shadow-sm"
+                    : "text-on-surface-variant"
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="flex bg-surface-container p-1 rounded-lg self-start">
+          {(Object.keys(METRIC_LABELS) as Metric[]).map((m) => (
             <button
-              key={p}
-              onClick={() => setPeriod(p)}
-              className={`px-3 py-1 text-xs font-bold rounded transition-colors ${
-                period === p
+              key={m}
+              onClick={() => setMetric(m)}
+              className={`px-4 py-1.5 text-xs font-bold rounded transition-colors ${
+                metric === m
                   ? "bg-white text-primary shadow-sm"
-                  : "text-on-surface-variant"
+                  : "text-on-surface-variant hover:text-on-surface"
               }`}
             >
-              {p}
+              {METRIC_LABELS[m]}
             </button>
           ))}
         </div>
@@ -172,6 +187,35 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
           />
         </AreaChart>
       </ResponsiveContainer>
+      {/* Min/Avg/Max Stats */}
+      <div className="grid grid-cols-3 gap-4 mt-8 pt-6">
+        {(() => {
+          const values = filteredData.map((d) =>
+            metric === "valorUnidad" ? d.valorUnidad : d[metric]
+          ).filter((v) => v > 0);
+          const minVal = values.length ? Math.min(...values) : 0;
+          const maxVal = values.length ? Math.max(...values) : 0;
+          const avgVal = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+          const fmt = (v: number) =>
+            isPercentage ? `${v.toFixed(2)}%` : formatCOP(v);
+          return (
+            <>
+              <div className="text-center">
+                <p className="text-[10px] font-bold text-on-surface-variant uppercase">Mínimo</p>
+                <p className="text-sm font-bold tabular-nums">{fmt(minVal)}</p>
+              </div>
+              <div className="text-center">
+                <p className="text-[10px] font-bold text-on-surface-variant uppercase">Promedio</p>
+                <p className="text-sm font-bold tabular-nums">{fmt(avgVal)}</p>
+              </div>
+              <div className="text-center">
+                <p className="text-[10px] font-bold text-on-surface-variant uppercase">Máximo</p>
+                <p className="text-sm font-bold tabular-nums">{fmt(maxVal)}</p>
+              </div>
+            </>
+          );
+        })()}
+      </div>
     </div>
   );
 }

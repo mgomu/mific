@@ -51,7 +51,7 @@ export function FundSearchModal({
     >
       <div className="absolute inset-0 bg-black/40" />
       <div
-        className="relative bg-white rounded-2xl w-[480px] max-h-[80vh] p-6 shadow-2xl"
+        className="relative bg-surface-container-lowest rounded-2xl w-[480px] max-h-[80vh] p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -63,7 +63,7 @@ export function FundSearchModal({
         <h3 className="text-lg font-semibold mb-4">Agregar fondo</h3>
         <input
           type="text"
-          className="w-full border border-outline-variant/30 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary mb-4"
+          className="w-full border-none bg-surface-container-low rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:outline-none mb-4"
           placeholder="Buscar por nombre o administradora..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}

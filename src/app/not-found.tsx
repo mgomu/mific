@@ -7,7 +7,7 @@ export default function NotFound() {
         <span className="material-symbols-outlined text-6xl text-on-surface-variant/40 mb-4">
           search_off
         </span>
-        <h1 className="text-2xl font-bold text-on-surface mb-2">
+        <h1 className="text-2xl font-bold text-on-surface mb-2 font-headline">
           Página no encontrada
         </h1>
         <p className="text-on-surface-variant mb-6">

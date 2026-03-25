@@ -46,8 +46,8 @@ const ROWS: Row[] = [
 export function ComparisonTable({ funds }: ComparisonTableProps) {
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
-      <div className="p-6 border-b border-surface-container">
-        <h2 className="font-display text-xl font-bold text-primary">
+      <div className="p-6">
+        <h2 className="font-headline text-xl font-bold text-primary">
           Métricas Comparativas
         </h2>
       </div>
@@ -76,9 +76,9 @@ export function ComparisonTable({ funds }: ComparisonTableProps) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-surface-container">
-            {ROWS.map((row) => (
-              <tr key={row.label}>
+          <tbody>
+            {ROWS.map((row, idx) => (
+              <tr key={row.label} className={idx % 2 === 0 ? "bg-surface-container-lowest" : "bg-surface"}>
                 <td className="p-4 font-semibold text-on-surface-variant">
                   {row.label}
                 </td>

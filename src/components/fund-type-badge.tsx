@@ -41,7 +41,7 @@ export function FundTypeBadge({ type }: { type: string }) {
 
   return (
     <span
-      className={`px-3 py-1 rounded-full text-[10px] font-bold ${config.bg} ${config.text}`}
+      className={`px-3 py-1 rounded-full text-[10px] font-bold whitespace-nowrap ${config.bg} ${config.text}`}
     >
       {config.label}
     </span>

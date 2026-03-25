@@ -152,15 +152,15 @@ export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
 
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="4" stroke="#e9edff" />
+            <CartesianGrid strokeDasharray="4" stroke="#c5c5d3" opacity={0.15} />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 11, fill: "#434655" }}
+              tick={{ fontSize: 11, fill: "#444651" }}
               tickLine={false}
               axisLine={false}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#434655" }}
+              tick={{ fontSize: 11, fill: "#444651" }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => (isPercentage ? `${v}%` : `$${v.toLocaleString()}`)}
@@ -170,7 +170,7 @@ export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
                 backgroundColor: "white",
                 border: "none",
                 borderRadius: 8,
-                boxShadow: "0 12px 40px rgba(0, 74, 198, 0.12)",
+                boxShadow: "0 12px 40px rgba(0, 35, 111, 0.12)",
               }}
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               formatter={(value: any, name: any) => [
