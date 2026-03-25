@@ -6,17 +6,17 @@ const TYPE_MAP: Record<string, { label: string; bg: string; text: string }> = {
   },
   inmobiliario: {
     label: "Inmobiliario",
-    bg: "bg-secondary-fixed",
-    text: "text-on-secondary-fixed",
+    bg: "bg-primary-fixed/40",
+    text: "text-primary",
   },
   monetario: {
     label: "Mercado Monetario",
-    bg: "bg-primary-fixed",
-    text: "text-on-primary-fixed",
+    bg: "bg-secondary-fixed/40",
+    text: "text-secondary",
   },
   bursátil: {
     label: "Bursátil",
-    bg: "bg-tertiary-fixed",
+    bg: "bg-tertiary-fixed/40",
     text: "text-on-tertiary-fixed",
   },
 };
