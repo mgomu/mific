@@ -141,7 +141,7 @@ export function RankingClient({
 
 
           {/* Table Card */}
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+          <div className="bg-surface-container-lowest rounded-xl shadow-ambient overflow-hidden mb-8">
 
             {sorted.length === 0 ? (
               <div className="text-center py-20">
@@ -170,10 +170,10 @@ export function RankingClient({
                 />
 
                 {visibleCount < sorted.length && (
-                  <div className="p-4 bg-surface-container-low/50 flex items-center justify-center border-t border-surface-container-low">
+                  <div className="p-4 bg-surface-container-low/30 flex items-center justify-center">
                     <button
                       onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-                      className="text-xs font-bold text-primary hover:bg-white hover:shadow-sm px-6 py-2 rounded-lg transition-all"
+                      className="rounded-full border border-primary/20 hover:bg-primary-fixed/30 text-xs font-bold text-primary hover:text-primary-container px-6 py-2 transition-all"
                     >
                       Cargar Más Fondos
                     </button>

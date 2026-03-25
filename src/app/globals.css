@@ -2,13 +2,13 @@
 
 @theme {
   --font-sans: "Inter", system-ui, sans-serif;
-  --font-display: "Manrope", system-ui, sans-serif;
+  --font-display: "Inter", system-ui, sans-serif;
 }
 
 body {
   font-family: "Inter", system-ui, sans-serif;
-  background-color: #f7f9fb;
-  color: #191c1e;
+  background-color: #f9f9ff;
+  color: #141b2b;
 }
 
 .tabular-nums {
