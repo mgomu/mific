@@ -157,7 +157,7 @@ export function CompararClient() {
           <span>Comparar</span>
         </nav>
 
-        <h1 className="text-3xl font-extrabold tracking-tight text-on-surface mb-6">
+        <h1 className="text-3xl font-extrabold font-display tracking-tight text-on-surface mb-6">
           Comparar fondos
         </h1>
 
