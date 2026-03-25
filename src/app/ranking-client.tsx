@@ -128,7 +128,6 @@ export function RankingClient({
           selectedItem={subtipo}
           onItemChange={(v) => { setSubtipo(v); setVisibleCount(PAGE_SIZE); }}
           counts={subtipoCounts}
-          onReset={() => { setSubtipo(""); setVisibleCount(PAGE_SIZE); }}
         />
 
         <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
