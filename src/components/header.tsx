@@ -16,7 +16,7 @@ export function Header({
   const isExplore = pathname === "/";
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-[#f7f9fb]/80 backdrop-blur-xl">
+    <nav className="fixed top-0 w-full z-50 bg-surface-container-lowest backdrop-blur-xl">
       <div className="flex items-center justify-between px-6 py-3 w-full max-w-screen-2xl mx-auto">
         <div className="flex items-center gap-8">
           <Link

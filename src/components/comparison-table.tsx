@@ -38,7 +38,7 @@ const ROWS: Row[] = [
     render: (f) => <ProfitabilityIndicator value={f.rentabilidadSemestral} />,
   },
   {
-    label: "Rentabilidad Anual",
+    label: "Rentabilidad Efectiva Anual",
     render: (f) => <ProfitabilityIndicator value={f.rentabilidadAnual} />,
   },
 ];

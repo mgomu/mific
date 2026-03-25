@@ -105,7 +105,7 @@ function AdminFilterHeader({
           hasFilter ? "text-primary" : ""
         }`}
       >
-        Administradora
+        Sociedad Administradora
         {hasFilter && (
           <span className="ml-0.5 bg-primary text-on-primary text-[10px] font-bold rounded-full w-4 h-4 inline-flex items-center justify-center">
             {selected.length}
@@ -135,7 +135,7 @@ function AdminFilterHeader({
               </span>
               <input
                 type="text"
-                placeholder="Buscar administradora..."
+                placeholder="Buscar sociedad administradora..."
                 value={filterSearch}
                 onChange={(e) => setFilterSearch(e.target.value)}
                 className="w-full text-xs px-3 pl-9 py-2.5 rounded-xl bg-surface-container-high-low border border-outline-variant/10 outline-none placeholder:text-on-surface-variant/40 text-on-surface focus:border-primary/30 transition-colors"
@@ -229,7 +229,7 @@ export function RankingTable({
             )}
             <SortHeader label="Activos Administrados" field="valorFondo" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
             <SortHeader label="Valor Unidad" field="valorUnidad" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
-            <SortHeader label="Rentabilidad Anual" field="rentabilidadAnual" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
+            <SortHeader label="Rentabilidad Efectiva Anual" field="rentabilidadAnual" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
           </tr>
         </thead>
         <tbody>

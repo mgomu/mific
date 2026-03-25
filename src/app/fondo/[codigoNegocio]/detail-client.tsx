@@ -62,7 +62,7 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
 
           <div className="bg-surface-container-lowest p-6 rounded-xl">
             <p className="text-sm font-semibold text-on-surface-variant mb-4 uppercase tracking-wider">
-              Rentabilidad Anual
+              Rentabilidad Efectiva Anual
             </p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-secondary tabular-nums">

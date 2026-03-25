@@ -51,7 +51,7 @@ export function FundTypeSidebar({
   const sorted = [...items].sort((a, b) => categoryIndex(a) - categoryIndex(b));
 
   return (
-    <aside className="h-screen w-64 sticky top-16 left-0 bg-surface-container-low flex-col gap-y-2 p-4 hidden lg:flex">
+    <aside className="h-screen w-64 sticky top-16 left-0 bg-surface flex-col gap-y-2 p-4 hidden lg:flex">
       <div className="space-y-1">
         {sorted.map((item) => (
           <button
