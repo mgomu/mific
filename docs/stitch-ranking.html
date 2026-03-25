@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>mific - Fondos de Inversión Colectiva</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-variant": "#dce2f7",
+              "surface-dim": "#d3daef",
+              "on-primary-fixed": "#00174b",
+              "surface": "#f9f9ff",
+              "primary-fixed-dim": "#b4c5ff",
+              "surface-container-high": "#e1e8fd",
+              "outline": "#737686",
+              "error-container": "#ffdad6",
+              "on-secondary": "#ffffff",
+              "tertiary-container": "#007d55",
+              "surface-container-low": "#f1f3ff",
+              "secondary-fixed": "#eaddff",
+              "on-background": "#141b2b",
+              "outline-variant": "#c3c6d7",
+              "inverse-primary": "#b4c5ff",
+              "surface-bright": "#f9f9ff",
+              "on-tertiary-fixed": "#002113",
+              "surface-container-highest": "#dce2f7",
+              "on-primary-container": "#eeefff",
+              "secondary-container": "#8a4cfc",
+              "on-tertiary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-surface": "#141b2b",
+              "tertiary-fixed": "#6ffbbe",
+              "on-tertiary-fixed-variant": "#005236",
+              "on-surface-variant": "#434655",
+              "inverse-surface": "#293040",
+              "on-primary-fixed-variant": "#003ea8",
+              "on-primary": "#ffffff",
+              "on-secondary-fixed": "#25005a",
+              "background": "#f9f9ff",
+              "primary": "#004ac6",
+              "secondary": "#712ae2",
+              "primary-fixed": "#dbe1ff",
+              "on-error": "#ffffff",
+              "inverse-on-surface": "#edf0ff",
+              "on-secondary-container": "#fffbff",
+              "tertiary": "#006242",
+              "on-error-container": "#93000a",
+              "on-tertiary-container": "#bdffdb",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed-dim": "#4edea3",
+              "primary-container": "#2563eb",
+              "surface-container": "#e9edff",
+              "secondary-fixed-dim": "#d2bbff",
+              "surface-tint": "#0053db",
+              "on-secondary-fixed-variant": "#5a00c6"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        /* Hide scrollbar but keep functionality */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full h-[64px] z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-[0_12px_40px_rgba(20,27,43,0.06)] flex items-center justify-center">
+<div class="flex items-center justify-between px-8 w-full max-w-[1440px]">
+<div class="flex items-center gap-12">
+<span class="text-2xl font-bold tracking-tight text-[#004ac6] dark:text-[#2563eb]">mific</span>
+<!-- Search Bar (on_left as per JSON constraint) -->
+<div class="relative hidden md:block w-[400px]">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Buscar fondos, administradoras..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+<a class="text-[#004ac6] font-bold border-b-2 border-[#004ac6] py-5" href="#">Explorar</a>
+<a class="text-[#434655] dark:text-slate-400 hover:bg-[#f1f3ff] px-3 py-1 rounded-lg transition-all" href="#">Mi Portafolio</a>
+<a class="text-[#434655] dark:text-slate-400 hover:bg-[#f1f3ff] px-3 py-1 rounded-lg transition-all" href="#">Educación</a>
+</nav>
+<button class="bg-gradient-to-r from-primary to-primary-container text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+                    Compare (0)
+                </button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-8 max-w-[1440px] mx-auto min-h-screen">
+<!-- Hero Section -->
+<section class="mb-10">
+<h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface mb-2">Fondos de Inversión Colectiva</h1>
+<p class="text-on-surface-variant text-lg">247 fondos disponibles · Datos al 21 de marzo de 2026</p>
+</section>
+<!-- Filters Bar -->
+<section class="flex flex-wrap items-center gap-4 mb-8">
+<div class="group relative">
+<button class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-lowest rounded-full text-sm font-medium text-on-surface shadow-sm border border-outline-variant/20 hover:bg-surface-container-low transition-colors">
+                    Tipo de fondo
+                    <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+<div class="group relative">
+<button class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-lowest rounded-full text-sm font-medium text-on-surface shadow-sm border border-outline-variant/20 hover:bg-surface-container-low transition-colors">
+                    Administradora
+                    <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+<div class="group relative">
+<button class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-lowest rounded-full text-sm font-medium text-on-surface shadow-sm border border-outline-variant/20 hover:bg-surface-container-low transition-colors">
+                    Subtipo
+                    <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+<button class="text-primary text-sm font-semibold hover:underline ml-2">Limpiar filtros</button>
+</section>
+<!-- Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_12px_40px_rgba(20,27,43,0.06)] overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low text-on-surface-variant text-xs font-semibold uppercase tracking-wider">
+<tr>
+<th class="px-6 py-4 w-12 text-center">
+<input class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</th>
+<th class="px-4 py-4 w-12 tabular-nums">#</th>
+<th class="px-6 py-4">Fondo</th>
+<th class="px-6 py-4">Tipo</th>
+<th class="px-6 py-4 text-right">Valor unidad (COP)</th>
+<th class="px-6 py-4 text-right">Rent. mensual</th>
+<th class="px-6 py-4 text-right">Rent. semestral</th>
+<th class="px-6 py-4 text-right bg-primary/5 text-primary border-b-2 border-primary">Rent. anual</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group">
+<td class="px-6 py-4 text-center">
+<input checked="" class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-sm tabular-nums font-medium text-on-surface-variant">1</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Fondo Balanceado Global</span>
+<span class="text-xs text-on-surface-variant">BBVA AM</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-secondary-fixed text-on-secondary-fixed">Inmobiliario</span>
+</td>
+<td class="px-6 py-4 text-right text-sm tabular-nums">$52.431,20</td>
+<td class="px-6 py-4 text-right">
+<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary font-bold text-xs">
+<span class="material-symbols-outlined text-xs">north_east</span>
+                                    1.24%
+                                </div>
+</td>
+<td class="px-6 py-4 text-right text-sm tabular-nums">8.45%</td>
+<td class="px-6 py-4 text-right text-sm tabular-nums font-bold text-primary bg-primary/5">18.22%</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group">
+<td class="px-6 py-4 text-center">
+<input checked="" class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-sm tabular-nums font-medium text-on-surface-variant">2</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Estratégico Deuda</span>
+<span class="text-xs text-on-surface-variant">Bancolombia</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-primary-fixed text-on-primary-fixed">Mercado Monetario</span>
+</td>
+<td class="px-6 py-4 text-right text-sm tabular-nums">$18.902,45</td>
+<td class="px-6 py-4 text-right">
+<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary font-bold text-xs">
+<span class="material-symbols-outlined text-xs">north_east</span>
+                                    0.98%
+                                </div>
+</td>
+<td class="px-6 py-4 text-right text-sm tabular-nums">6.12%</td>
+<td class="px-6 py-4 text-right text-sm tabular-nums font-bold text-primary bg-primary/5">15.40%</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group">
+<td class="px-6 py-4 text-center">
+<input class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-sm tabular-nums font-medium text-on-surface-variant">3</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Acciones Colombia Plus</span>
+<span class="text-xs text-on-surface-variant">BTG Pactual</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-tertiary-fixed text-on-tertiary-fixed-variant">Bursátil</span>
+</td>
+<td class="px-6 py-4 text-right text-sm tabular-nums">$2.150,88</td>
+<td class="px-6 py-4 text-right">
+<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-error-container text-error font-bold text-xs">
+<span class="material-symbols-outlined text-xs">south_east</span>
+                                    -0.42%
+                                </div>
+</td>
+<td class="px-6 py-4 text-right text-sm tabular-nums">4.20%</td>
+<td class="px-6 py-4 text-right text-sm tabular-nums font-bold text-primary bg-primary/5">14.12%</td>
+</tr>
+<!-- Zebra spacing via transparent rows -->
+<tr class="h-4"></tr>
+<!-- Repeat visual pattern for more data points -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group">
+<td class="px-6 py-4 text-center">
+<input class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="px-4 py-4 text-sm tabular-nums font-medium text-on-surface-variant">4</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Largo Plazo Fijo</span>
+<span class="text-xs text-on-surface-variant">Credicorp Capital</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-primary-fixed text-on-primary-fixed">Mercado Monetario</span>
+</td>
+<td class="px-6 py-4 text-right text-sm tabular-nums">$12.440,00</td>
+<td class="px-6 py-4 text-right">
+<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary font-bold text-xs">
+<span class="material-symbols-outlined text-xs">north_east</span>
+                                    1.10%
+                                </div>
+</td>
+<td class="px-6 py-4 text-right text-sm tabular-nums">5.90%</td>
+<td class="px-6 py-4 text-right text-sm tabular-nums font-bold text-primary bg-primary/5">13.88%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-end px-8 py-6 bg-surface-container-low/50">
+<div class="flex items-center gap-6">
+<span class="text-xs font-medium text-on-surface-variant">Mostrando 1-50 de 247</span>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg border border-outline-variant/30 hover:bg-surface text-on-surface-variant disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 rounded-lg border border-outline-variant/30 hover:bg-surface text-on-surface">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Comparison Bar) -->
+<div class="fixed bottom-0 left-0 w-full flex justify-center items-center pb-8 px-6 z-[60]">
+<div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg shadow-[0_-8px_30px_rgba(20,27,43,0.08)] rounded-2xl py-4 px-8 flex items-center justify-between gap-12 max-w-[800px] w-full border border-white/20">
+<div class="flex items-center gap-4">
+<span class="text-sm font-bold text-primary">Comparando:</span>
+<div class="flex gap-2">
+<div class="bg-primary-fixed/50 px-3 py-1 rounded-full flex items-center gap-2 text-xs font-semibold text-on-primary-fixed-variant">
+                        BBVA AM
+                        <span class="material-symbols-outlined text-xs cursor-pointer">close</span>
+</div>
+<div class="bg-primary-fixed/50 px-3 py-1 rounded-full flex items-center gap-2 text-xs font-semibold text-on-primary-fixed-variant">
+                        Bancolombia
+                        <span class="material-symbols-outlined text-xs cursor-pointer">close</span>
+</div>
+</div>
+</div>
+<button class="bg-gradient-to-r from-[#004ac6] to-[#2563eb] text-white rounded-full px-8 py-3 font-semibold text-sm flex items-center gap-2 hover:opacity-90 transition-opacity active:scale-95">
+                Comparar 2 fondos
+                <span class="material-symbols-outlined">compare_arrows</span>
+</button>
+</div>
+</div>
+<!-- Footer -->
+<footer class="w-full py-12 bg-[#f1f3ff] dark:bg-slate-950 flex flex-col items-center gap-4 text-center px-8">
+<div class="flex items-center gap-6 mb-2">
+<a class="text-sm font-['Inter'] leading-[1.6] text-[#434655] opacity-80 hover:text-[#004ac6] transition-colors" href="#">Terms</a>
+<a class="text-sm font-['Inter'] leading-[1.6] text-[#434655] opacity-80 hover:text-[#004ac6] transition-colors" href="#">Privacy</a>
+<a class="text-sm font-['Inter'] leading-[1.6] text-[#434655] opacity-80 hover:text-[#004ac6] transition-colors" href="#">Github</a>
+</div>
+<div class="text-sm font-['Inter'] leading-[1.6] text-[#434655]">
+<span class="font-bold text-[#004ac6]">mific</span> - SF Colombia disclaimer. Open-source project.
+        </div>
+</footer>
+</body></html>
