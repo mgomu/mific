@@ -98,19 +98,19 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
         <AreaChart data={chartData}>
           <defs>
             <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#004ac6" stopOpacity={0.1} />
-              <stop offset="95%" stopColor="#004ac6" stopOpacity={0} />
+              <stop offset="5%" stopColor="#006a61" stopOpacity={0.1} />
+              <stop offset="95%" stopColor="#006a61" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#c3c6d7" opacity={0.3} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#c5c5d3" opacity={0.3} />
           <XAxis
             dataKey="date"
-            tick={{ fontSize: 11, fill: "#434655" }}
+            tick={{ fontSize: 11, fill: "#444651" }}
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            tick={{ fontSize: 11, fill: "#434655" }}
+            tick={{ fontSize: 11, fill: "#444651" }}
             tickLine={false}
             axisLine={false}
             tickFormatter={(v) => (isPercentage ? `${v}%` : `$${v.toLocaleString()}`)}
@@ -120,7 +120,7 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
               backgroundColor: "white",
               border: "none",
               borderRadius: 8,
-              boxShadow: "0 12px 40px rgba(20, 27, 43, 0.12)",
+              boxShadow: "0 12px 40px rgba(0, 35, 111, 0.12)",
               padding: "8px 12px",
             }}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -136,7 +136,7 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
           <Area
             type="monotone"
             dataKey="value"
-            stroke="#004ac6"
+            stroke="#00236f"
             strokeWidth={2}
             fill="url(#areaGradient)"
           />
