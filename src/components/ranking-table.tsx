@@ -35,7 +35,7 @@ function SortHeader({
   const isActive = currentField === field;
   return (
     <th
-      className={`p-4 text-xs font-bold text-on-surface-variant/60 tracking-wider cursor-pointer select-none ${
+      className={`px-4 py-4 text-xs font-bold text-on-surface-variant/60 tracking-wider cursor-pointer select-none ${
         align === "right" ? "text-right" : ""
       }`}
       onClick={() => onSort(field)}
@@ -67,30 +67,32 @@ export function RankingTable({
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="bg-surface-container-low">
-            <th className="p-4 w-12">
+            <th className="px-4 py-4 w-12">
               <span className="sr-only">Select</span>
             </th>
             <SortHeader label="Nombre del fondo" field="nombrePatrimonio" currentField={sortField} currentDir={sortDir} onSort={onSort} />
-            <th className="p-4 text-xs font-bold text-on-surface-variant/60 tracking-wider">
+            <th className="px-4 py-4 text-xs font-bold text-on-surface-variant/60 tracking-wider">
               Administradora
             </th>
-            <th className="p-4 text-xs font-bold text-on-surface-variant/60 tracking-wider">
+            <th className="px-4 py-4 text-xs font-bold text-on-surface-variant/60 tracking-wider">
               Tipo
             </th>
             <SortHeader label="Valor Unidad" field="valorUnidad" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
             <SortHeader label="Rentabilidad Anual" field="rentabilidadAnual" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
           </tr>
         </thead>
-        <tbody className="divide-y divide-surface-container-low">
-          {funds.map((fund) => {
+        <tbody>
+          {funds.map((fund, idx) => {
             const isSelected = selectedIds.includes(fund.codigoNegocio);
 
             return (
               <tr
                 key={fund.codigoNegocio}
-                className="hover:bg-surface-container-low/50 transition-colors cursor-pointer group"
+                className={`hover:bg-surface-container-low/60 transition-colors cursor-pointer group ${
+                  idx % 2 === 0 ? "bg-surface-container-lowest" : "bg-surface"
+                }`}
               >
-                <td className="p-4" onClick={(e) => e.stopPropagation()}>
+                <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
                   <input
                     type="checkbox"
                     checked={isSelected}
@@ -99,7 +101,7 @@ export function RankingTable({
                     aria-label={`Seleccionar ${fund.nombrePatrimonio}`}
                   />
                 </td>
-                <td className="p-4">
+                <td className="px-4 py-4">
                   <Link href={`/fondo/${fund.codigoNegocio}`} className="flex flex-col">
                     <span className="text-sm font-bold text-primary group-hover:text-primary-container transition-colors">
                       {toSentenceCase(fund.nombrePatrimonio)}
@@ -109,7 +111,7 @@ export function RankingTable({
                     </span>
                   </Link>
                 </td>
-                <td className="p-4">
+                <td className="px-4 py-4">
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-surface-container-high rounded-full flex-shrink-0 flex items-center justify-center text-[8px] font-bold text-on-surface-variant">
                       {fund.nombreEntidad.slice(0, 2).toUpperCase()}
@@ -119,15 +121,15 @@ export function RankingTable({
                     </span>
                   </div>
                 </td>
-                <td className="p-4">
+                <td className="px-4 py-4">
                   <FundTypeBadge type={fund.nombreSubtipoPatrimonio} />
                 </td>
-                <td className="p-4 text-right text-sm tabular-nums text-on-surface-variant font-mono">
+                <td className="px-4 py-4 text-right text-sm tabular-nums text-on-surface-variant font-mono">
                   {formatCOP(fund.valorUnidad)}
                 </td>
-                <td className="p-4 text-right">
+                <td className="px-4 py-4 text-right">
                   <span className={`font-bold flex items-center gap-1 justify-end ${
-                    fund.rentabilidadAnual >= 0 ? "text-secondary" : "text-error"
+                    fund.rentabilidadAnual >= 0 ? "text-tertiary" : "text-error"
                   }`}>
                     <span className="material-symbols-outlined text-sm">
                       {fund.rentabilidadAnual >= 0 ? "trending_up" : "trending_down"}
