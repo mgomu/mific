@@ -9,29 +9,26 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from "recharts";
 import type { FundRecord } from "@/lib/types";
 import { formatShortDate } from "@/lib/format";
-
-const CHART_COLORS = ["#2563eb", "#7C3AED", "#F59E0B", "#10B981", "#EF4444"];
+import { CHART_COLORS } from "@/lib/chart-colors";
 
 type Metric = "rentabilidadAnual" | "rentabilidadMensual" | "rentabilidadSemestral" | "valorUnidad";
-type Period = "3M" | "6M" | "1A" | "2A" | "Todo";
+type Period = "1M" | "6M" | "YTD" | "1Y" | "MAX";
+type MetricMode = "Mensual" | "Anual";
 
-const METRIC_LABELS: Record<Metric, string> = {
-  rentabilidadMensual: "Rent. mensual",
-  rentabilidadSemestral: "Rent. semestral",
-  rentabilidadAnual: "Rent. anual",
-  valorUnidad: "Valor de la unidad",
+const METRIC_MAP: Record<MetricMode, Metric> = {
+  Mensual: "rentabilidadMensual",
+  Anual: "rentabilidadAnual",
 };
 
 const PERIOD_DAYS: Record<Period, number | null> = {
-  "3M": 90,
+  "1M": 30,
   "6M": 180,
-  "1A": 365,
-  "2A": 730,
-  Todo: null,
+  YTD: null, // special handling
+  "1Y": 365,
+  MAX: null,
 };
 
 interface ComparisonChartProps {
@@ -40,13 +37,25 @@ interface ComparisonChartProps {
 }
 
 export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
-  const [metric, setMetric] = useState<Metric>("rentabilidadAnual");
-  const [period, setPeriod] = useState<Period>("1A");
+  const [metricMode, setMetricMode] = useState<MetricMode>("Mensual");
+  const [period, setPeriod] = useState<Period>("YTD");
   const [hiddenLines, setHiddenLines] = useState<Set<string>>(new Set());
 
+  const metric = METRIC_MAP[metricMode];
   const codigos = [...fundData.keys()];
-  const days = PERIOD_DAYS[period];
-  const since = days ? new Date(Date.now() - days * 86400000) : null;
+
+  // Calculate "since" date
+  const getSince = (): Date | null => {
+    if (period === "MAX") return null;
+    if (period === "YTD") {
+      const now = new Date();
+      return new Date(now.getFullYear(), 0, 1);
+    }
+    const days = PERIOD_DAYS[period];
+    return days ? new Date(Date.now() - days * 86400000) : null;
+  };
+
+  const since = getSince();
 
   const dateMap = new Map<string, Record<string, number>>();
   for (const [codigo, records] of fundData) {
@@ -70,106 +79,125 @@ export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
   const isPercentage = metric !== "valorUnidad";
 
   return (
-    <div className="bg-surface-container-lowest rounded-xl p-6 shadow-ambient">
-      <div className="flex gap-6 border-b border-outline-variant/20 mb-4">
-        {(Object.keys(METRIC_LABELS) as Metric[]).map((m) => (
-          <button
-            key={m}
-            onClick={() => setMetric(m)}
-            className={`pb-2 text-sm font-medium transition-colors ${
-              metric === m
-                ? "text-primary border-b-2 border-primary"
-                : "text-on-surface-variant hover:text-on-surface"
-            }`}
-          >
-            {METRIC_LABELS[m]}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex gap-2 mb-6">
-        {(Object.keys(PERIOD_DAYS) as Period[]).map((p) => (
-          <button
-            key={p}
-            onClick={() => setPeriod(p)}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-              period === p
-                ? "bg-primary text-white"
-                : "bg-surface-container text-on-surface-variant"
-            }`}
-          >
-            {p}
-          </button>
-        ))}
-      </div>
-
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#c5c5d3" opacity={0.3} />
-          <XAxis
-            dataKey="date"
-            tick={{ fontSize: 11, fill: "#444651" }}
-            tickLine={false}
-            axisLine={false}
-          />
-          <YAxis
-            tick={{ fontSize: 11, fill: "#444651" }}
-            tickLine={false}
-            axisLine={false}
-            tickFormatter={(v) => (isPercentage ? `${v}%` : `$${v.toLocaleString()}`)}
-          />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "white",
-              border: "none",
-              borderRadius: 8,
-              boxShadow: "0 12px 40px rgba(0, 35, 111, 0.12)",
-            }}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            formatter={(value: any, name: any) => [
-              typeof value === "number"
-                ? isPercentage ? `${value.toFixed(2)}%` : `$${value.toLocaleString()}`
-                : String(value ?? ""),
-              fundNames.get(String(name)) ?? String(name),
-            ]}
-          />
-          {codigos.map((codigo, i) => (
-            <Line
-              key={codigo}
-              type="monotone"
-              dataKey={codigo}
-              name={codigo}
-              stroke={CHART_COLORS[i % CHART_COLORS.length]}
-              strokeWidth={2}
-              dot={false}
-              hide={hiddenLines.has(codigo)}
-            />
+    <div className="space-y-6">
+      {/* Controls Card */}
+      <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-wrap items-center justify-between gap-4">
+        <div className="flex gap-2 p-1 bg-surface-container-low rounded-lg">
+          {(["Mensual", "Anual"] as MetricMode[]).map((m) => (
+            <button
+              key={m}
+              onClick={() => setMetricMode(m)}
+              className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${
+                metricMode === m
+                  ? "bg-white text-primary shadow-sm"
+                  : "text-on-surface-variant hover:bg-surface transition-colors"
+              }`}
+            >
+              {m}
+            </button>
           ))}
-        </LineChart>
-      </ResponsiveContainer>
-
-      <div className="flex flex-wrap gap-4 mt-4 justify-center">
-        {codigos.map((codigo, i) => (
-          <button
-            key={codigo}
-            onClick={() =>
-              setHiddenLines((prev) => {
-                const next = new Set(prev);
-                next.has(codigo) ? next.delete(codigo) : next.add(codigo);
-                return next;
-              })
-            }
-            className={`flex items-center gap-2 text-xs text-on-surface-variant transition-opacity ${
-              hiddenLines.has(codigo) ? "opacity-40" : ""
-            }`}
-          >
-            <span
-              className="w-2.5 h-2.5 rounded-full"
-              style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
-            />
-            {fundNames.get(codigo) ?? codigo}
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="flex gap-1">
+            {(Object.keys(PERIOD_DAYS) as Period[]).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPeriod(p)}
+                className={`px-3 py-1 text-xs font-bold rounded transition-colors ${
+                  period === p
+                    ? "text-primary bg-primary-fixed"
+                    : "text-on-surface-variant hover:bg-surface-container-low"
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+          <button className="flex items-center gap-2 px-4 py-2 text-sm font-semibold border border-outline-variant/30 rounded-lg hover:bg-surface-container-low transition-colors">
+            <span className="material-symbols-outlined text-sm">calendar_today</span>
+            Personalizado
           </button>
-        ))}
+        </div>
+      </div>
+
+      {/* Chart Card */}
+      <div className="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-wrap gap-4">
+            {codigos.map((codigo, i) => (
+              <button
+                key={codigo}
+                onClick={() =>
+                  setHiddenLines((prev) => {
+                    const next = new Set(prev);
+                    next.has(codigo) ? next.delete(codigo) : next.add(codigo);
+                    return next;
+                  })
+                }
+                className={`flex items-center gap-2 transition-opacity ${
+                  hiddenLines.has(codigo) ? "opacity-40" : ""
+                }`}
+              >
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
+                />
+                <span className="text-xs font-bold text-on-surface">
+                  {fundNames.get(codigo) ?? codigo}
+                </span>
+              </button>
+            ))}
+          </div>
+          <button className="text-primary text-sm font-bold hover:underline flex items-center gap-1">
+            <span className="material-symbols-outlined text-sm">download</span> Exportar
+          </button>
+        </div>
+
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="4" stroke="#eceef0" />
+            <XAxis
+              dataKey="date"
+              tick={{ fontSize: 11, fill: "#444651" }}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              tick={{ fontSize: 11, fill: "#444651" }}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(v) => (isPercentage ? `${v}%` : `$${v.toLocaleString()}`)}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "white",
+                border: "none",
+                borderRadius: 8,
+                boxShadow: "0 12px 40px rgba(0, 35, 111, 0.12)",
+              }}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              formatter={(value: any, name: any) => [
+                typeof value === "number"
+                  ? isPercentage ? `${value.toFixed(2)}%` : `$${value.toLocaleString()}`
+                  : String(value ?? ""),
+                fundNames.get(String(name)) ?? String(name),
+              ]}
+            />
+            {codigos.map((codigo, i) => (
+              <Line
+                key={codigo}
+                type="monotone"
+                dataKey={codigo}
+                name={codigo}
+                stroke={CHART_COLORS[i % CHART_COLORS.length]}
+                strokeWidth={3}
+                dot={false}
+                hide={hiddenLines.has(codigo)}
+                strokeLinecap="round"
+              />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

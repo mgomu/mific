@@ -38,3 +38,19 @@ export function formatShortDate(date: Date): string {
     year: "numeric",
   }).format(date);
 }
+
+const ACRONYMS = new Set(["FIC", "FCP", "ETF", "AFP", "CDT", "TES", "DTF"]);
+
+export function toSentenceCase(str: string): string {
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map((word) => {
+      const stripped = word.replace(/^\(|\)$/g, "");
+      const pre = word.startsWith("(") ? "(" : "";
+      const post = word.endsWith(")") ? ")" : "";
+      if (ACRONYMS.has(stripped.toUpperCase())) return pre + stripped.toUpperCase() + post;
+      return pre + stripped.charAt(0).toUpperCase() + stripped.slice(1) + post;
+    })
+    .join(" ");
+}

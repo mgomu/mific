@@ -5,13 +5,12 @@ import { useSearchParams, useRouter } from "next/navigation";
 import type { FundRecord } from "@/lib/types";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { toSentenceCase } from "@/lib/format";
 import { ComparisonChart } from "@/components/comparison-chart";
 import { ComparisonTable } from "@/components/comparison-table";
 import { FundSearchModal } from "@/components/fund-search-modal";
 import { Skeleton } from "@/components/skeleton";
-import Link from "next/link";
-
-const CHART_COLORS = ["#2563eb", "#7C3AED", "#F59E0B", "#10B981", "#EF4444"];
+import { CHART_COLORS } from "@/lib/chart-colors";
 
 export function CompararClient() {
   const searchParams = useSearchParams();
@@ -134,8 +133,12 @@ export function CompararClient() {
   }
 
   const fundNames = new Map<string, string>();
+  const fundEntities = new Map<string, string>();
   for (const [codigo, records] of fundData) {
-    if (records.length > 0) fundNames.set(codigo, records[0].nombrePatrimonio);
+    if (records.length > 0) {
+      fundNames.set(codigo, records[0].nombrePatrimonio);
+      fundEntities.set(codigo, records[0].nombreEntidad);
+    }
   }
 
   const latestPerFund = ids
@@ -148,48 +151,16 @@ export function CompararClient() {
   return (
     <>
       <Header showSearch={false} />
-      <main className="pt-24 pb-32 px-8 max-w-[1440px] mx-auto min-h-screen">
-        <nav className="mb-6 text-xs text-on-surface-variant">
-          <Link href="/" className="text-primary hover:underline">
-            Fondos
-          </Link>
-          <span className="mx-2">{"\u2192"}</span>
-          <span>Comparar</span>
-        </nav>
-
-        <h1 className="text-3xl font-extrabold font-display tracking-tight text-on-surface mb-6">
-          Comparar fondos
-        </h1>
-
-        <div className="flex flex-wrap items-center gap-2 mb-8">
-          {ids.map((id, i) => (
-            <span
-              key={id}
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-surface-container-high rounded-lg text-xs font-medium"
-            >
-              <span
-                className="w-2.5 h-2.5 rounded-full"
-                style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
-              />
-              {(fundNames.get(id) ?? id).slice(0, 30)}
-              <button
-                onClick={() => removeFund(id)}
-                className="text-on-surface-variant hover:text-error"
-              >
-                <span className="material-symbols-outlined text-sm">close</span>
-              </button>
-            </span>
-          ))}
-          {ids.length < 5 && (
-            <button
-              onClick={() => setModalOpen(true)}
-              className="inline-flex items-center gap-1 px-3 py-1.5 border border-dashed border-outline-variant rounded-lg text-xs font-medium text-primary hover:bg-surface-container-low transition-colors"
-            >
-              <span className="material-symbols-outlined text-sm">add</span>
-              Agregar fondo
-            </button>
-          )}
-        </div>
+      <main className="pt-24 pb-20 px-6 max-w-screen-2xl mx-auto min-h-screen">
+        {/* Header Section */}
+        <header className="mb-10">
+          <h1 className="font-display text-4xl font-extrabold text-primary tracking-tight mb-2">
+            Comparación de Fondos
+          </h1>
+          <p className="text-on-surface-variant font-medium">
+            Analiza y compara el rendimiento histórico de tus selecciones.
+          </p>
+        </header>
 
         {ids.length < 2 ? (
           <div className="text-center py-20">
@@ -199,12 +170,12 @@ export function CompararClient() {
             <p className="text-lg font-semibold text-on-surface-variant">
               Selecciona al menos 2 fondos para comparar
             </p>
-            <Link
+            <a
               href="/"
               className="inline-block mt-4 px-6 py-2 border border-outline-variant rounded-full text-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors"
             >
               Ir al ranking
-            </Link>
+            </a>
           </div>
         ) : loading ? (
           <div className="space-y-6">
@@ -212,12 +183,112 @@ export function CompararClient() {
             <Skeleton className="h-[300px] w-full" />
           </div>
         ) : (
-          <div className="space-y-6">
-            <ComparisonChart fundData={fundData} fundNames={fundNames} />
-            <ComparisonTable funds={latestPerFund} />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* Left Column: Chart */}
+            <div className="lg:col-span-9 space-y-6">
+              <ComparisonChart fundData={fundData} fundNames={fundNames} />
+            </div>
+
+            {/* Right Column: Selected Funds */}
+            <div className="lg:col-span-3 space-y-6">
+              <div className="bg-surface-container-low rounded-xl p-6 h-full">
+                <h2 className="font-display text-lg font-bold text-primary mb-4 flex items-center justify-between">
+                  Fondos Seleccionados
+                  <span className="bg-primary-fixed text-primary px-2 py-0.5 rounded text-xs">
+                    {ids.length}/5
+                  </span>
+                </h2>
+                <div className="space-y-3">
+                  {ids.map((id, i) => (
+                    <div
+                      key={id}
+                      className="bg-surface-container-lowest p-3 rounded-lg shadow-sm group"
+                      style={{ borderLeft: `4px solid ${CHART_COLORS[i % CHART_COLORS.length]}` }}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="text-xs font-bold text-primary">
+                            {toSentenceCase(fundEntities.get(id) ?? "")}
+                          </p>
+                          <p className="text-sm font-bold text-on-surface leading-tight">
+                            {toSentenceCase((fundNames.get(id) ?? id).slice(0, 30))}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => removeFund(id)}
+                          className="text-on-surface-variant hover:text-error opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <span className="material-symbols-outlined text-lg">close</span>
+                        </button>
+                      </div>
+                      <div className="mt-2 flex items-center justify-between border-t border-surface pt-2">
+                        <span className="text-[10px] uppercase font-bold text-on-surface-variant">Rent. YTD</span>
+                        <span className="text-xs font-bold text-secondary">
+                          {latestPerFund.find((f) => f.codigoNegocio === id)
+                            ? `+${latestPerFund.find((f) => f.codigoNegocio === id)!.rentabilidadAnual.toFixed(1)}%`
+                            : "—"}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                  {ids.length < 5 && (
+                    <button
+                      onClick={() => setModalOpen(true)}
+                      className="w-full border-2 border-dashed border-outline-variant/50 rounded-lg p-4 text-on-surface-variant hover:bg-white hover:text-primary transition-all flex flex-col items-center justify-center gap-1 group"
+                    >
+                      <span className="material-symbols-outlined">add_circle</span>
+                      <span className="text-xs font-bold">Agregar Fondo</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Comparison Table: Full Width */}
+            <div className="lg:col-span-12 mt-8">
+              <ComparisonTable funds={latestPerFund} />
+            </div>
           </div>
         )}
       </main>
+
+      {/* Comparison Float Bar */}
+      {ids.length >= 2 && !loading && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-2xl z-40 px-6">
+          <div className="bg-surface-container-lowest/90 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-primary-fixed/20 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex -space-x-3">
+                {ids.map((id, i) => (
+                  <div
+                    key={id}
+                    className="w-10 h-10 rounded-full border-2 border-white flex items-center justify-center text-white text-[10px] font-bold"
+                    style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
+                  >
+                    {(fundNames.get(id) ?? id).slice(0, 3).toUpperCase()}
+                  </div>
+                ))}
+              </div>
+              <div className="hidden sm:block">
+                <p className="text-sm font-bold text-primary leading-none">
+                  Comparando {ids.length} fondos
+                </p>
+                <p className="text-[10px] text-on-surface-variant font-medium mt-1">
+                  Sincronizado con tus favoritos
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button className="bg-surface-container-highest px-4 py-2 rounded-lg text-sm font-bold text-primary hover:bg-surface-container-low transition-colors">
+                Compartir
+              </button>
+              <button className="bg-primary px-6 py-2 rounded-lg text-sm font-bold text-white shadow-lg hover:scale-105 active:scale-95 transition-all">
+                Generar Reporte PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
       <FundSearchModal
         isOpen={modalOpen}

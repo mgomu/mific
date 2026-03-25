@@ -4,10 +4,10 @@ import { useState, useMemo } from "react";
 import type { FundRecord } from "@/lib/types";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { FilterBar } from "@/components/filter-bar";
 import { FundTypeSidebar } from "@/components/fund-type-sidebar";
 import { RankingTable, type SortField, type SortDir } from "@/components/ranking-table";
 import { ComparisonBar } from "@/components/comparison-bar";
+import { toSentenceCase } from "@/lib/format";
 
 const PAGE_SIZE = 50;
 
@@ -19,22 +19,12 @@ export function RankingClient({
   fechaCorte?: string;
 }) {
   const [search, setSearch] = useState("");
-  const [tipo, setTipo] = useState("");
-  const [admin, setAdmin] = useState("");
   const [subtipo, setSubtipo] = useState("");
   const [sortField, setSortField] = useState<SortField>("rentabilidadAnual");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [page, setPage] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  const tipos = useMemo(
-    () => [...new Set(funds.map((f) => f.nombreTipoPatrimonio))].sort(),
-    [funds]
-  );
-  const admins = useMemo(
-    () => [...new Set(funds.map((f) => f.nombreEntidad))].sort(),
-    [funds]
-  );
   const subtipos = useMemo(
     () => [...new Set(funds.map((f) => f.nombreSubtipoPatrimonio))].sort(),
     [funds]
@@ -58,12 +48,9 @@ export function RankingClient({
           f.nombreEntidad.toLowerCase().includes(q)
       );
     }
-    if (tipo) result = result.filter((f) => f.nombreTipoPatrimonio === tipo);
-    if (admin) result = result.filter((f) => f.nombreEntidad === admin);
-    if (subtipo)
-      result = result.filter((f) => f.nombreSubtipoPatrimonio === subtipo);
+    if (subtipo) result = result.filter((f) => f.nombreSubtipoPatrimonio === subtipo);
     return result;
-  }, [funds, search, tipo, admin, subtipo]);
+  }, [funds, search, subtipo]);
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
@@ -80,8 +67,7 @@ export function RankingClient({
     });
   }, [filtered, sortField, sortDir]);
 
-  const paginated = sorted.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-  const totalPages = Math.ceil(sorted.length / PAGE_SIZE);
+  const visible = sorted.slice(0, visibleCount);
 
   function handleSort(field: SortField) {
     if (field === sortField) {
@@ -90,7 +76,7 @@ export function RankingClient({
       setSortField(field);
       setSortDir("desc");
     }
-    setPage(0);
+    setVisibleCount(PAGE_SIZE);
   }
 
   function toggleSelect(id: string) {
@@ -104,11 +90,30 @@ export function RankingClient({
   const selectedFunds = selectedIds
     .map((id) => {
       const fund = funds.find((f) => f.codigoNegocio === id);
-      return fund ? { id, name: fund.nombrePatrimonio } : null;
+      return fund ? { id, name: toSentenceCase(fund.nombrePatrimonio) } : null;
     })
     .filter(Boolean) as { id: string; name: string }[];
 
-  const hasActiveFilters = !!(tipo || admin || subtipo);
+  // Compute top performing subtype
+  const topType = useMemo(() => {
+    const typeAvg = new Map<string, { sum: number; count: number }>();
+    for (const f of funds) {
+      const entry = typeAvg.get(f.nombreSubtipoPatrimonio) ?? { sum: 0, count: 0 };
+      entry.sum += f.rentabilidadAnual;
+      entry.count += 1;
+      typeAvg.set(f.nombreSubtipoPatrimonio, entry);
+    }
+    let best = "";
+    let bestAvg = -Infinity;
+    for (const [name, { sum, count }] of typeAvg) {
+      const avg = sum / count;
+      if (avg > bestAvg) {
+        bestAvg = avg;
+        best = name;
+      }
+    }
+    return { name: best, avg: bestAvg };
+  }, [funds]);
 
   return (
     <>
@@ -118,37 +123,51 @@ export function RankingClient({
         searchValue={search}
         onSearchChange={setSearch}
       />
-      <main className="pt-24 pb-32 px-8 max-w-[1440px] mx-auto min-h-screen">
-        <section className="mb-10">
-          <h1 className="text-4xl md:text-5xl font-extrabold font-display tracking-tight text-on-surface mb-2">
-            Fondos de Inversión Colectiva
-          </h1>
-          <p className="text-on-surface-variant text-lg">
-            {sorted.length} fondos disponibles
-            {fechaCorte && ` · Datos al ${fechaCorte}`}
-          </p>
-        </section>
+      <div className="flex pt-16 min-h-screen">
+        <FundTypeSidebar
+          items={subtipos}
+          selectedItem={subtipo}
+          onItemChange={(v) => { setSubtipo(v); setVisibleCount(PAGE_SIZE); }}
+          counts={subtipoCounts}
+          onReset={() => { setSubtipo(""); setVisibleCount(PAGE_SIZE); }}
+        />
 
-        <div className="flex gap-8">
-          <FundTypeSidebar
-            label="Subtipo"
-            items={subtipos}
-            selectedItem={subtipo}
-            onItemChange={(v) => { setSubtipo(v); setPage(0); }}
-            counts={subtipoCounts}
-          />
+        <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
+          {/* Page Header */}
+          <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <h1 className="font-display text-4xl font-extrabold text-primary tracking-tight">
+                Ranking de Fondos de Inversión
+              </h1>
+              <p className="text-on-surface-variant mt-2 max-w-xl">
+                Compara el rendimiento de los principales FICs (Fondos de Inversión Colectiva) de Colombia con datos transparentes en tiempo real.
+              </p>
+            </div>
+            {fechaCorte && (
+              <div className="bg-surface-container px-4 py-2 rounded-lg flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-sm">calendar_today</span>
+                <span className="text-sm font-semibold text-primary">{fechaCorte}</span>
+              </div>
+            )}
+          </header>
 
-          <div className="flex-1 min-w-0">
-            <FilterBar
-              tipos={tipos}
-              admins={admins}
-              selectedTipo={tipo}
-              selectedAdmin={admin}
-              onTipoChange={(v) => { setTipo(v); setPage(0); }}
-              onAdminChange={(v) => { setAdmin(v); setPage(0); }}
-              onClear={() => { setTipo(""); setAdmin(""); setSubtipo(""); setPage(0); }}
-              hasActiveFilters={hasActiveFilters}
-            />
+
+          {/* Table Card */}
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+            <div className="p-4 border-b border-surface-container-low flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <h3 className="font-bold text-primary">Ranking de Todos los Fondos</h3>
+                <span className="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-bold">EN VIVO</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button className="flex items-center gap-2 text-xs font-semibold text-on-surface-variant hover:text-primary p-2">
+                  <span className="material-symbols-outlined text-lg">sort</span> Ordenar
+                </button>
+                <button className="flex items-center gap-2 text-xs font-semibold text-on-surface-variant hover:text-primary p-2">
+                  <span className="material-symbols-outlined text-lg">filter_list</span> Columnas
+                </button>
+              </div>
+            </div>
 
             {sorted.length === 0 ? (
               <div className="text-center py-20">
@@ -165,7 +184,7 @@ export function RankingClient({
             ) : (
               <>
                 <RankingTable
-                  funds={paginated}
+                  funds={visible}
                   selectedIds={selectedIds}
                   onToggleSelect={toggleSelect}
                   sortField={sortField}
@@ -173,34 +192,22 @@ export function RankingClient({
                   onSort={handleSort}
                 />
 
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-end gap-4 mt-6">
-                    <span className="text-xs text-on-surface-variant">
-                      Mostrando {page * PAGE_SIZE + 1}-
-                      {Math.min((page + 1) * PAGE_SIZE, sorted.length)} de{" "}
-                      {sorted.length}
-                    </span>
+                {visibleCount < sorted.length && (
+                  <div className="p-4 bg-surface-container-low/50 flex items-center justify-center border-t border-surface-container-low">
                     <button
-                      onClick={() => setPage((p) => p - 1)}
-                      disabled={page === 0}
-                      className="px-4 py-2 border border-outline-variant/40 rounded-lg text-sm disabled:opacity-40"
+                      onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                      className="text-xs font-bold text-primary hover:bg-white hover:shadow-sm px-6 py-2 rounded-lg transition-all"
                     >
-                      Anterior
-                    </button>
-                    <button
-                      onClick={() => setPage((p) => p + 1)}
-                      disabled={page >= totalPages - 1}
-                      className="px-4 py-2 border border-outline-variant/40 rounded-lg text-sm disabled:opacity-40"
-                    >
-                      Siguiente
+                      Cargar Más Fondos
                     </button>
                   </div>
                 )}
               </>
             )}
           </div>
-        </div>
-      </main>
+
+        </main>
+      </div>
 
       <Footer fechaCorte={fechaCorte} />
       <ComparisonBar

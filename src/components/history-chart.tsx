@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -98,43 +96,26 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
   const isPercentage = metric !== "valorUnidad";
 
   return (
-    <div className="bg-surface-container-lowest rounded-xl p-6 shadow-ambient">
-      <h2 className="text-lg font-semibold text-on-surface mb-4">
-        Evolución histórica
-      </h2>
-
-      {/* Metric tabs */}
-      <div className="flex gap-6 border-b border-outline-variant/20 mb-4">
-        {(Object.keys(METRIC_LABELS) as Metric[]).map((m) => (
-          <button
-            key={m}
-            onClick={() => setMetric(m)}
-            className={`pb-2 text-sm font-medium transition-colors ${
-              metric === m
-                ? "text-primary border-b-2 border-primary"
-                : "text-on-surface-variant hover:text-on-surface"
-            }`}
-          >
-            {METRIC_LABELS[m]}
-          </button>
-        ))}
-      </div>
-
-      {/* Period selector */}
-      <div className="flex gap-2 mb-6">
-        {(Object.keys(PERIOD_DAYS) as Period[]).map((p) => (
-          <button
-            key={p}
-            onClick={() => setPeriod(p)}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-              period === p
-                ? "bg-primary text-white"
-                : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high"
-            }`}
-          >
-            {p}
-          </button>
-        ))}
+    <div className="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-xl font-bold text-primary font-display">
+          Evolución Histórica
+        </h2>
+        <div className="flex bg-surface-container p-1 rounded-lg">
+          {(Object.keys(PERIOD_DAYS) as Period[]).map((p) => (
+            <button
+              key={p}
+              onClick={() => setPeriod(p)}
+              className={`px-3 py-1 text-xs font-bold rounded transition-colors ${
+                period === p
+                  ? "bg-white text-primary shadow-sm"
+                  : "text-on-surface-variant"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Chart */}

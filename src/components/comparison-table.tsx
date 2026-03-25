@@ -1,8 +1,7 @@
 import type { FundRecord } from "@/lib/types";
 import { ProfitabilityIndicator } from "./profitability-indicator";
-import { formatCOP, formatNumber, formatCompactCOP } from "@/lib/format";
-
-const CHART_COLORS = ["#2563eb", "#7C3AED", "#F59E0B", "#10B981", "#EF4444"];
+import { formatCOP, formatNumber, formatCompactCOP, toSentenceCase } from "@/lib/format";
+import { CHART_COLORS } from "@/lib/chart-colors";
 
 interface ComparisonTableProps {
   funds: FundRecord[];
@@ -14,67 +13,62 @@ type Row = {
 };
 
 const ROWS: Row[] = [
-  { label: "Administradora", render: (f) => f.nombreEntidad },
-  { label: "Tipo", render: (f) => f.nombreTipoPatrimonio },
-  { label: "Subtipo", render: (f) => f.nombreSubtipoPatrimonio },
   {
-    label: "Valor de la unidad",
-    render: (f) => <span className="tabular-nums">{formatCOP(f.valorUnidad)}</span>,
+    label: "Valor Unidad",
+    render: (f) => <span className="font-bold tabular-nums">{formatCOP(f.valorUnidad)}</span>,
   },
   {
-    label: "Rent. diaria",
+    label: "Valor del Fondo",
+    render: (f) => <span className="font-bold tabular-nums">{formatCompactCOP(f.valorFondo)}</span>,
+  },
+  {
+    label: "Inversionistas",
+    render: (f) => <span className="font-bold tabular-nums">{formatNumber(f.numeroInversionistas)}</span>,
+  },
+  {
+    label: "Rentabilidad Diaria",
     render: (f) => <ProfitabilityIndicator value={f.rentabilidadDiaria} />,
   },
   {
-    label: "Rent. mensual",
+    label: "Rentabilidad Mensual",
     render: (f) => <ProfitabilityIndicator value={f.rentabilidadMensual} />,
   },
   {
-    label: "Rent. semestral",
+    label: "Rentabilidad Semestral",
     render: (f) => <ProfitabilityIndicator value={f.rentabilidadSemestral} />,
   },
   {
-    label: "Rent. anual",
+    label: "Rentabilidad Anual",
     render: (f) => <ProfitabilityIndicator value={f.rentabilidadAnual} />,
-  },
-  {
-    label: "N\u00ba inversionistas",
-    render: (f) => <span className="tabular-nums">{formatNumber(f.numeroInversionistas)}</span>,
-  },
-  {
-    label: "Valor del fondo",
-    render: (f) => <span className="tabular-nums">{formatCompactCOP(f.valorFondo)}</span>,
   },
 ];
 
 export function ComparisonTable({ funds }: ComparisonTableProps) {
   return (
-    <div className="bg-surface-container-lowest rounded-xl shadow-ambient overflow-hidden">
-      <div className="p-6 pb-0">
-        <h2 className="text-lg font-semibold text-on-surface">
-          Comparaci\u00f3n detallada
+    <div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+      <div className="p-6 border-b border-surface-container">
+        <h2 className="font-display text-xl font-bold text-primary">
+          Métricas Comparativas
         </h2>
       </div>
-      <div className="overflow-x-auto mt-4">
-        <table className="w-full text-sm">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
           <thead>
-            <tr>
-              <th className="sticky left-0 bg-surface-container-low px-4 py-3 text-left text-xs font-semibold text-on-surface-variant w-[180px]">
-                M\u00e9trica
+            <tr className="bg-surface">
+              <th className="p-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                Métrica
               </th>
               {funds.map((fund, i) => (
-                <th key={fund.codigoNegocio} className="px-4 py-3 text-left min-w-[160px]">
-                  <div className="flex items-center gap-2">
-                    <span
+                <th key={fund.codigoNegocio} className="p-4 text-center">
+                  <div className="inline-flex items-center gap-2">
+                    <div
                       className="w-2.5 h-2.5 rounded-full shrink-0"
                       style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
                     />
-                    <div>
-                      <p className="text-sm font-semibold text-on-surface truncate max-w-[140px]">
-                        {fund.nombrePatrimonio}
-                      </p>
-                      <p className="text-xs text-on-surface-variant">
-                        {fund.nombreEntidad}
+                    <div className="text-left">
+                      <p className="text-xs font-bold text-primary">{toSentenceCase(fund.nombreEntidad)}</p>
+                      <p className="text-sm font-bold text-on-surface truncate max-w-[140px]">
+                        {toSentenceCase(fund.nombrePatrimonio)}
                       </p>
                     </div>
                   </div>
@@ -82,16 +76,16 @@ export function ComparisonTable({ funds }: ComparisonTableProps) {
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-surface-container">
             {ROWS.map((row) => (
-              <tr key={row.label} className="hover:bg-surface-container-low/50 transition-colors">
-                <td className="sticky left-0 bg-surface-container-low/80 backdrop-blur-sm px-4 py-3 text-xs font-medium text-on-surface-variant">
+              <tr key={row.label}>
+                <td className="p-4 font-semibold text-on-surface-variant">
                   {row.label}
                 </td>
                 {funds.map((fund) => (
                   <td
                     key={fund.codigoNegocio}
-                    className="px-4 py-3 text-right"
+                    className="p-4 text-center"
                   >
                     {row.render(fund)}
                   </td>
