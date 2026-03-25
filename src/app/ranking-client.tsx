@@ -40,10 +40,10 @@ export function RankingClient({
     [funds]
   );
 
-  const tipoCounts = useMemo(() => {
+  const subtipoCounts = useMemo(() => {
     const counts = new Map<string, number>();
     for (const f of funds) {
-      counts.set(f.nombreTipoPatrimonio, (counts.get(f.nombreTipoPatrimonio) ?? 0) + 1);
+      counts.set(f.nombreSubtipoPatrimonio, (counts.get(f.nombreSubtipoPatrimonio) ?? 0) + 1);
     }
     return counts;
   }, [funds]);
@@ -131,23 +131,21 @@ export function RankingClient({
 
         <div className="flex gap-8">
           <FundTypeSidebar
-            tipos={tipos}
-            selectedTipo={tipo}
-            onTipoChange={(v) => { setTipo(v); setPage(0); }}
-            counts={tipoCounts}
+            label="Subtipo"
+            items={subtipos}
+            selectedItem={subtipo}
+            onItemChange={(v) => { setSubtipo(v); setPage(0); }}
+            counts={subtipoCounts}
           />
 
           <div className="flex-1 min-w-0">
             <FilterBar
               tipos={tipos}
               admins={admins}
-              subtipos={subtipos}
               selectedTipo={tipo}
               selectedAdmin={admin}
-              selectedSubtipo={subtipo}
               onTipoChange={(v) => { setTipo(v); setPage(0); }}
               onAdminChange={(v) => { setAdmin(v); setPage(0); }}
-              onSubtipoChange={(v) => { setSubtipo(v); setPage(0); }}
               onClear={() => { setTipo(""); setAdmin(""); setSubtipo(""); setPage(0); }}
               hasActiveFilters={hasActiveFilters}
             />

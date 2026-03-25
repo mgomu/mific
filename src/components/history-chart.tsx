@@ -33,8 +33,56 @@ const PERIOD_DAYS: Record<Period, number | null> = {
   Todo: null,
 };
 
+// How many days to group together per period
+const PERIOD_BUCKET_DAYS: Record<Period, number> = {
+  "1M": 1,
+  "3M": 3,
+  "6M": 7,
+  "1A": 7,
+  Todo: 30,
+};
+
+function aggregateData(
+  records: FundRecord[],
+  bucketDays: number,
+  metric: Metric
+): { date: string; value: number; fullDate: string }[] {
+  if (bucketDays <= 1) {
+    return records.map((d) => ({
+      date: formatShortDate(d.fechaCorte),
+      value: metric === "valorUnidad" ? d.valorUnidad : d[metric],
+      fullDate: d.fechaCorte.toLocaleDateString("es-CO"),
+    }));
+  }
+
+  const buckets = new Map<number, { sum: number; count: number; date: Date }>();
+  const msPerDay = 86_400_000;
+  const bucketMs = bucketDays * msPerDay;
+
+  for (const d of records) {
+    const key = Math.floor(d.fechaCorte.getTime() / bucketMs);
+    const val = metric === "valorUnidad" ? d.valorUnidad : d[metric];
+    if (val == null) continue;
+    const existing = buckets.get(key);
+    if (existing) {
+      existing.sum += val;
+      existing.count += 1;
+    } else {
+      buckets.set(key, { sum: val, count: 1, date: d.fechaCorte });
+    }
+  }
+
+  return Array.from(buckets.values())
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .map(({ sum, count, date }) => ({
+      date: formatShortDate(date),
+      value: sum / count,
+      fullDate: date.toLocaleDateString("es-CO"),
+    }));
+}
+
 export function HistoryChart({ data }: { data: FundRecord[] }) {
-  const [metric, setMetric] = useState<Metric>("rentabilidadAnual");
+  const [metric, setMetric] = useState<Metric>("valorUnidad");
   const [period, setPeriod] = useState<Period>("1A");
 
   const filteredData = (() => {
@@ -45,11 +93,7 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
     return data.filter((d) => d.fechaCorte >= since);
   })();
 
-  const chartData = filteredData.map((d) => ({
-    date: formatShortDate(d.fechaCorte),
-    value: metric === "valorUnidad" ? d.valorUnidad : d[metric],
-    fullDate: d.fechaCorte.toLocaleDateString("es-CO"),
-  }));
+  const chartData = aggregateData(filteredData, PERIOD_BUCKET_DAYS[period], metric);
 
   const isPercentage = metric !== "valorUnidad";
 
@@ -108,6 +152,8 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
             tick={{ fontSize: 11, fill: "#444651" }}
             tickLine={false}
             axisLine={false}
+            interval="preserveStartEnd"
+            minTickGap={60}
           />
           <YAxis
             tick={{ fontSize: 11, fill: "#444651" }}
@@ -125,9 +171,12 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
             }}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             formatter={(value: any) =>
-              typeof value === "number"
-                ? isPercentage ? `${value.toFixed(2)}%` : `$${value.toLocaleString()}`
-                : String(value ?? "")
+              [
+                typeof value === "number"
+                  ? isPercentage ? `${value.toFixed(2)}%` : `$${value.toLocaleString()}`
+                  : String(value ?? ""),
+                METRIC_LABELS[metric],
+              ]
             }
             labelFormatter={(_, payload) =>
               payload[0]?.payload?.fullDate ?? ""

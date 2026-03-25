@@ -10,7 +10,7 @@ function parseRecord(raw: SodaRawRecord): FundRecord {
     nombrePatrimonio: raw.nombre_patrimonio,
     nombreTipoPatrimonio: raw.nombre_tipo_patrimonio,
     nombreSubtipoPatrimonio: raw.nombre_subtipo_patrimonio,
-    valorUnidad: parseFloat(raw.valor_unidad_operaciones_dia_t) || 0,
+    valorUnidad: parseFloat(raw.valor_unidad_operaciones) || 0,
     valorFondo: parseFloat(raw.valor_fondo_cierre_dia_t) || 0,
     numeroInversionistas: parseInt(raw.numero_inversionistas, 10) || 0,
     rentabilidadDiaria: parseFloat(raw.rentabilidad_diaria) || 0,
@@ -44,7 +44,13 @@ export async function fetchLatestFunds(): Promise<FundRecord[]> {
   const records = await sodaFetch(
     `$where=fecha_corte='${latestDate}'&$limit=5000`
   );
-  return records.map(parseRecord);
+  const parsed = records.map(parseRecord);
+  const seen = new Set<string>();
+  return parsed.filter((r) => {
+    if (seen.has(r.codigoNegocio)) return false;
+    seen.add(r.codigoNegocio);
+    return true;
+  });
 }
 
 export async function fetchFundHistory(

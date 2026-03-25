@@ -3,13 +3,10 @@
 interface FilterBarProps {
   tipos: string[];
   admins: string[];
-  subtipos: string[];
   selectedTipo: string;
   selectedAdmin: string;
-  selectedSubtipo: string;
   onTipoChange: (value: string) => void;
   onAdminChange: (value: string) => void;
-  onSubtipoChange: (value: string) => void;
   onClear: () => void;
   hasActiveFilters: boolean;
 }
@@ -44,37 +41,26 @@ function FilterButton({
 export function FilterBar({
   tipos,
   admins,
-  subtipos,
   selectedTipo,
   selectedAdmin,
-  selectedSubtipo,
   onTipoChange,
   onAdminChange,
-  onSubtipoChange,
   onClear,
   hasActiveFilters,
 }: FilterBarProps) {
   return (
     <section className="flex flex-wrap items-center gap-4 mb-8">
-      <div className="lg:hidden">
-        <FilterButton
-          label="Tipo de fondo"
-          options={tipos}
-          value={selectedTipo}
-          onChange={onTipoChange}
-        />
-      </div>
+      <FilterButton
+        label="Tipo de fondo"
+        options={tipos}
+        value={selectedTipo}
+        onChange={onTipoChange}
+      />
       <FilterButton
         label="Administradora"
         options={admins}
         value={selectedAdmin}
         onChange={onAdminChange}
-      />
-      <FilterButton
-        label="Subtipo"
-        options={subtipos}
-        value={selectedSubtipo}
-        onChange={onSubtipoChange}
       />
       {hasActiveFilters && (
         <button

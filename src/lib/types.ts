@@ -23,7 +23,7 @@ export interface SodaRawRecord {
   nombre_patrimonio: string;
   nombre_tipo_patrimonio: string;
   nombre_subtipo_patrimonio: string;
-  valor_unidad_operaciones_dia_t: string;
+  valor_unidad_operaciones: string;
   valor_fondo_cierre_dia_t: string;
   numero_inversionistas: string;
   rentabilidad_diaria: string;
