@@ -59,9 +59,10 @@ export function Header({
             className={`inline-flex items-center gap-2 px-6 py-2 rounded-full text-sm font-semibold transition-all ${
               compareCount >= 2
                 ? "bg-gradient-to-r from-primary to-primary-container text-white shadow-lg shadow-primary/20 active:scale-95"
-                : "bg-surface-container-high text-on-surface-variant"
+                : "bg-surface-container-high text-on-surface-variant pointer-events-none cursor-default"
             }`}
             aria-disabled={compareCount < 2}
+            tabIndex={compareCount < 2 ? -1 : undefined}
           >
             <span className="material-symbols-outlined text-base">compare_arrows</span>
             Comparar ({compareCount})
