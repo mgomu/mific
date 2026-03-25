@@ -165,7 +165,7 @@ export function CompararClient() {
           {ids.map((id, i) => (
             <span
               key={id}
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-lg text-xs font-medium"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-surface-container-high rounded-lg text-xs font-medium"
             >
               <span
                 className="w-2.5 h-2.5 rounded-full"
