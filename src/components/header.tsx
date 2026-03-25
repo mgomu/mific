@@ -17,8 +17,8 @@ export function Header({
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-surface-container-lowest backdrop-blur-xl">
-      <div className="flex items-center justify-between px-6 py-2 w-full max-w-screen-2xl mx-auto">
-        <div className="flex items-center gap-8">
+      <div className="grid grid-cols-3 items-center px-6 py-2 w-full max-w-screen-2xl mx-auto">
+        <div className="flex items-center">
           <Link
             href="/"
             className="text-2xl font-headline font-bold tracking-tight text-primary"
@@ -26,7 +26,10 @@ export function Header({
             MiFIC
           </Link>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex justify-center">
+          <FeedbackBubble />
+        </div>
+        <div className="flex items-center justify-end gap-4">
           {showSearch && (
             <div className="relative hidden lg:block">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">
@@ -42,9 +45,6 @@ export function Header({
             </div>
           )}
         </div>
-      </div>
-      <div className="flex items-center justify-center pb-1">
-        <FeedbackBubble />
       </div>
     </nav>
   );
