@@ -29,7 +29,7 @@ function FilterButton({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="px-5 py-2.5 bg-surface-container-lowest rounded-full text-sm font-medium text-on-surface shadow-sm border border-outline-variant/20 hover:bg-surface-container-low transition-colors appearance-none cursor-pointer pr-10"
+      className="px-5 py-2.5 bg-surface-container-lowest rounded-full text-sm font-medium text-on-surface shadow-sm hover:bg-surface-container-low transition-colors appearance-none cursor-pointer pr-10"
     >
       <option value="">{label}</option>
       {options.map((opt) => (
