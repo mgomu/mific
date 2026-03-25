@@ -3,10 +3,9 @@
 import Link from "next/link";
 import type { FundRecord } from "@/lib/types";
 import { FundTypeBadge } from "./fund-type-badge";
-import { ProfitabilityIndicator } from "./profitability-indicator";
 import { formatCOP } from "@/lib/format";
 
-type SortField = "nombrePatrimonio" | "valorUnidad" | "rentabilidadMensual" | "rentabilidadSemestral" | "rentabilidadAnual";
+type SortField = "nombrePatrimonio" | "valorUnidad" | "rentabilidadAnual";
 type SortDir = "asc" | "desc";
 
 interface RankingTableProps {
@@ -78,8 +77,6 @@ export function RankingTable({
               <SortHeader label="Fondo" field="nombrePatrimonio" currentField={sortField} currentDir={sortDir} onSort={onSort} />
               <th className="px-6 py-4">Tipo</th>
               <SortHeader label="Valor unidad" field="valorUnidad" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
-              <SortHeader label="Rent. mensual" field="rentabilidadMensual" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
-              <SortHeader label="Rent. semestral" field="rentabilidadSemestral" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
               <SortHeader label="Rent. anual" field="rentabilidadAnual" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" isDefault={sortField === "rentabilidadAnual"} />
             </tr>
           </thead>
@@ -118,12 +115,6 @@ export function RankingTable({
                   </td>
                   <td className="px-6 py-4 text-right text-sm tabular-nums">
                     {formatCOP(fund.valorUnidad)}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <ProfitabilityIndicator value={fund.rentabilidadMensual} />
-                  </td>
-                  <td className="px-6 py-4 text-right text-sm tabular-nums">
-                    {fund.rentabilidadSemestral.toFixed(2)}%
                   </td>
                   <td className="px-6 py-4 text-right text-sm tabular-nums font-bold text-primary bg-primary/5">
                     {fund.rentabilidadAnual.toFixed(2)}%
