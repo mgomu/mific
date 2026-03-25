@@ -155,7 +155,7 @@ export function CompararClient() {
       <main className="pt-24 pb-20 px-6 max-w-screen-2xl mx-auto min-h-screen">
         {/* Header Section */}
         <header className="mb-10">
-          <h1 className="font-display text-4xl font-extrabold text-primary tracking-tight mb-2">
+          <h1 className="text-4xl font-extrabold text-primary tracking-tight mb-2">
             Comparación de Fondos
           </h1>
           <p className="text-on-surface-variant font-medium">
@@ -173,7 +173,7 @@ export function CompararClient() {
             </p>
             <a
               href="/"
-              className="inline-block mt-4 px-6 py-2 border border-outline-variant rounded-full text-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors"
+              className="inline-block mt-4 px-6 py-2 border border-outline-variant/30 rounded-full text-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors"
             >
               Ir al ranking
             </a>
@@ -192,8 +192,8 @@ export function CompararClient() {
 
             {/* Right Column: Selected Funds */}
             <div className="lg:col-span-3 space-y-6">
-              <div className="bg-surface-container-low rounded-xl p-6 h-full">
-                <h2 className="font-display text-lg font-bold text-primary mb-4 flex items-center justify-between">
+              <div className="bg-surface-container-lowest rounded-xl p-6 h-full shadow-ambient">
+                <h2 className="text-lg font-bold text-primary mb-4 flex items-center justify-between">
                   Fondos Seleccionados
                   <span className="bg-primary-fixed text-primary px-2 py-0.5 rounded text-xs">
                     {ids.length}/5
@@ -203,7 +203,7 @@ export function CompararClient() {
                   {ids.map((id, i) => (
                     <div
                       key={id}
-                      className="bg-surface-container-lowest p-3 rounded-lg shadow-sm group"
+                      className="bg-surface-container-lowest p-3 rounded-lg shadow-ambient group"
                       style={{ borderLeft: `4px solid ${CHART_COLORS[i % CHART_COLORS.length]}` }}
                     >
                       <div className="flex items-start justify-between">
@@ -222,9 +222,9 @@ export function CompararClient() {
                           <span className="material-symbols-outlined text-lg">close</span>
                         </button>
                       </div>
-                      <div className="mt-2 flex items-center justify-between border-t border-surface pt-2">
+                      <div className="mt-2 flex items-center justify-between pt-2 mt-2">
                         <span className="text-[10px] uppercase font-bold text-on-surface-variant">Rent. YTD</span>
-                        <span className="text-xs font-bold text-secondary">
+                        <span className="text-xs font-bold text-tertiary">
                           {latestPerFund.find((f) => f.codigoNegocio === id)
                             ? `+${latestPerFund.find((f) => f.codigoNegocio === id)!.rentabilidadAnual.toFixed(1)}%`
                             : "—"}
@@ -235,7 +235,7 @@ export function CompararClient() {
                   {ids.length < 5 && (
                     <button
                       onClick={() => setModalOpen(true)}
-                      className="w-full border-2 border-dashed border-outline-variant/50 rounded-lg p-4 text-on-surface-variant hover:bg-white hover:text-primary transition-all flex flex-col items-center justify-center gap-1 group"
+                      className="w-full border-2 border-dashed border-outline-variant/50 rounded-lg p-4 text-on-surface-variant hover:bg-surface-container-lowest hover:text-primary transition-all flex flex-col items-center justify-center gap-1 group"
                     >
                       <span className="material-symbols-outlined">add_circle</span>
                       <span className="text-xs font-bold">Agregar Fondo</span>
@@ -256,7 +256,7 @@ export function CompararClient() {
       {/* Comparison Float Bar */}
       {ids.length >= 2 && !loading && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-2xl z-40 px-6">
-          <div className="bg-surface-container-lowest/90 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-primary-fixed/20 flex items-center justify-between">
+          <div className="bg-surface-container-lowest/90 backdrop-blur-md rounded-2xl p-4 shadow-ambient border border-primary-fixed/20 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex -space-x-3">
                 {ids.map((id, i) => (
@@ -279,10 +279,10 @@ export function CompararClient() {
               </div>
             </div>
             <div className="flex gap-2">
-              <button className="bg-surface-container-highest px-4 py-2 rounded-lg text-sm font-bold text-primary hover:bg-surface-container-low transition-colors">
+              <button className="bg-surface-container-high px-4 py-2 rounded-full text-sm font-bold text-primary hover:bg-surface-container-highest transition-colors">
                 Compartir
               </button>
-              <button className="bg-primary px-6 py-2 rounded-lg text-sm font-bold text-white shadow-lg hover:scale-105 active:scale-95 transition-all">
+              <button className="bg-gradient-to-r from-primary to-primary-container text-on-primary px-6 py-2 rounded-full text-sm font-bold shadow-ambient hover:opacity-90 active:scale-95 transition-all">
                 Generar Reporte PDF
               </button>
             </div>
