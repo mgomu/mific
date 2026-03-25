@@ -21,7 +21,7 @@ export function Header({
       : "#";
 
   return (
-    <header className="fixed top-0 w-full h-16 z-50 bg-white/80 backdrop-blur-xl shadow-ambient flex items-center justify-center">
+    <header className="fixed top-0 w-full h-16 z-50 bg-surface-container-lowest/70 backdrop-blur-xl shadow-ambient flex items-center justify-center">
       <div className="flex items-center justify-between px-8 w-full max-w-[1440px]">
         <div className="flex items-center gap-12">
           <Link
@@ -49,7 +49,7 @@ export function Header({
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
             <Link
               href="/"
-              className="text-primary font-bold border-b-2 border-primary py-5"
+              className="text-primary font-bold py-5"
             >
               Explorar
             </Link>
