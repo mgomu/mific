@@ -111,7 +111,7 @@ export function RankingClient({
       />
       <main className="pt-24 pb-32 px-8 max-w-[1440px] mx-auto min-h-screen">
         <section className="mb-10">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface mb-2">
+          <h1 className="text-4xl md:text-5xl font-extrabold font-display tracking-tight text-on-surface mb-2">
             Fondos de Inversión Colectiva
           </h1>
           <p className="text-on-surface-variant text-lg">
