@@ -19,6 +19,7 @@ export function RankingClient({
 }) {
   const [search, setSearch] = useState("");
   const [subtipo, setSubtipo] = useState("");
+  const [administradoras_sel, setAdministradoras_sel] = useState<string[]>([]);
   const [sortField, setSortField] = useState<SortField>("rentabilidadAnual");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -37,6 +38,11 @@ export function RankingClient({
     return counts;
   }, [funds]);
 
+  const administradoras = useMemo(
+    () => [...new Set(funds.map((f) => f.nombreEntidad))].sort(),
+    [funds]
+  );
+
   const filtered = useMemo(() => {
     let result = funds;
     if (search) {
@@ -48,8 +54,9 @@ export function RankingClient({
       );
     }
     if (subtipo) result = result.filter((f) => f.nombreSubtipoPatrimonio === subtipo);
+    if (administradoras_sel.length > 0) result = result.filter((f) => administradoras_sel.includes(f.nombreEntidad));
     return result;
-  }, [funds, search, subtipo]);
+  }, [funds, search, subtipo, administradoras_sel]);
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
@@ -128,7 +135,6 @@ export function RankingClient({
           selectedItem={subtipo}
           onItemChange={(v) => { setSubtipo(v); setVisibleCount(PAGE_SIZE); }}
           counts={subtipoCounts}
-          onReset={() => { setSubtipo(""); setVisibleCount(PAGE_SIZE); }}
         />
 
         <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
@@ -158,6 +164,9 @@ export function RankingClient({
                   sortField={sortField}
                   sortDir={sortDir}
                   onSort={handleSort}
+                  administradoras={administradoras}
+                  selectedAdministradoras={administradoras_sel}
+                  onAdministradorasChange={(v) => { setAdministradoras_sel(v); setVisibleCount(PAGE_SIZE); }}
                 />
 
                 {visibleCount < sorted.length && (
