@@ -28,7 +28,7 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
         {/* Fund header */}
         <div className="flex justify-between items-start mb-8">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-on-surface mb-2">
+            <h1 className="text-3xl font-extrabold font-display tracking-tight text-on-surface mb-2">
               {latest.nombrePatrimonio}
             </h1>
             <p className="text-on-surface-variant mb-3">
@@ -49,10 +49,11 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
           </Link>
         </div>
 
-        <div className="h-px bg-outline-variant/20 mb-8" />
+        <div className="mb-8" />
 
         {/* Metric cards grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <div className="bg-surface-container-low rounded-xl p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <MetricCard
             label="Valor de la unidad"
             value={formatCOP(latest.valorUnidad)}
@@ -83,7 +84,7 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
             label="Valor del fondo"
             value={formatCompactCOP(latest.valorFondo)}
           />
-        </div>
+        </div></div>
 
         {/* Historical chart */}
         <HistoryChart data={history} />
