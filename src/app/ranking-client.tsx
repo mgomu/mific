@@ -104,10 +104,7 @@ export function RankingClient({
 
   return (
     <>
-      <Header
-        searchValue={search}
-        onSearchChange={setSearch}
-      />
+      <Header showSearch={false} />
       <div className="flex pt-20 min-h-screen">
         <FundTypeSidebar
           items={subtipos}
@@ -118,6 +115,32 @@ export function RankingClient({
         />
 
         <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
+
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-primary mb-2">
+              Ranking de Fondos de Inversión Colectiva y Fondos de Capital Privado colombianos
+            </h1>
+            <p className="text-sm text-on-surface-variant">
+              Seleccione hasta cinco fondos para comparar.
+            </p>
+            <p className="text-sm text-on-surface-variant mt-2">
+              Ingrese a un fondo específico para revisar sus principales indicadores.
+            </p>
+          </div>
+
+          {/* Search */}
+          <div className="relative mb-4">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">
+              search
+            </span>
+            <input
+              type="text"
+              className="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm w-full max-w-sm focus:ring-2 focus:ring-primary/20 transition-all"
+              placeholder="Buscar fondos..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
 
           {/* Table Card */}
           <div className="bg-surface-container-lowest rounded-xl shadow-ambient overflow-hidden mb-8">
