@@ -1,12 +1,13 @@
-export default function Home() {
-  return (
-    <main className="pt-24 pb-32 px-8 max-w-[1440px] mx-auto min-h-screen">
-      <h1 className="text-4xl font-extrabold tracking-tight text-on-surface">
-        Fondos de Inversión Colectiva
-      </h1>
-      <p className="text-on-surface-variant text-lg mt-2">
-        Cargando fondos...
-      </p>
-    </main>
-  );
+import { fetchLatestFunds } from "@/lib/api";
+import { formatDate } from "@/lib/format";
+import { RankingClient } from "./ranking-client";
+
+export const revalidate = 86400; // ISR: 24 hours
+
+export default async function Home() {
+  const funds = await fetchLatestFunds();
+  const fechaCorte =
+    funds.length > 0 ? formatDate(funds[0].fechaCorte) : undefined;
+
+  return <RankingClient funds={funds} fechaCorte={fechaCorte} />;
 }
