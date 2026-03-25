@@ -223,7 +223,7 @@ export function RankingTable({
               onChange={onAdministradorasChange}
             />
             {showType && (
-              <th className="px-4 py-3 text-xs font-bold text-on-surface-variant tracking-wide bg-surface-container-high border-b border-r border-outline-variant/8">
+              <th className="px-4 py-3 text-xs font-bold text-on-surface-variant tracking-wide bg-surface-container-high border-b border-r border-outline-variant/8 hidden md:table-cell">
                 Tipo
               </th>
             )}
@@ -263,7 +263,7 @@ export function RankingTable({
                   </span>
                 </td>
                 {showType && (
-                  <td className="px-4 py-5 border-b border-r border-outline-variant/8">
+                  <td className="px-4 py-5 border-b border-r border-outline-variant/8 hidden md:table-cell">
                     <FundTypeBadge type={fund.nombreSubtipoPatrimonio} />
                   </td>
                 )}

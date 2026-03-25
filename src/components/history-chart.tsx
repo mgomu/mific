@@ -94,10 +94,10 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
   const isPercentage = metric !== "valorUnidad";
 
   return (
-    <div className="bg-surface-container-lowest rounded-xl p-8 shadow-ambient">
-      <div className="flex flex-col gap-4 mb-8">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold text-primary font-headline">
+    <div className="bg-surface-container-lowest rounded-xl p-4 md:p-8 shadow-ambient">
+      <div className="flex flex-col gap-3 md:gap-4 mb-4 md:mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+          <h2 className="text-lg md:text-xl font-bold text-primary font-headline">
             Evolución Histórica
           </h2>
           <div className="flex bg-surface-container p-1 rounded-lg">
@@ -134,7 +134,7 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
       </div>
 
       {/* Chart */}
-      <ResponsiveContainer width="100%" height={320}>
+      <ResponsiveContainer width="100%" height={240} className="md:!h-[320px]">
         <AreaChart data={chartData}>
           <defs>
             <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
@@ -188,7 +188,7 @@ export function HistoryChart({ data }: { data: FundRecord[] }) {
         </AreaChart>
       </ResponsiveContainer>
       {/* Min/Avg/Max Stats */}
-      <div className="grid grid-cols-3 gap-4 mt-8 pt-6">
+      <div className="grid grid-cols-3 gap-2 md:gap-4 mt-4 md:mt-8 pt-4 md:pt-6">
         {(() => {
           const values = filteredData.map((d) =>
             metric === "valorUnidad" ? d.valorUnidad : d[metric]

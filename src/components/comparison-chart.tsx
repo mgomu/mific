@@ -81,8 +81,8 @@ export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
   return (
     <div className="space-y-6">
       {/* Controls Card */}
-      <div className="bg-surface-container-lowest rounded-xl p-6 shadow-ambient flex flex-wrap items-center justify-between gap-4">
-        <div className="flex gap-2 p-1 bg-surface-container-low rounded-lg">
+      <div className="bg-surface-container-lowest rounded-xl p-4 md:p-6 shadow-ambient flex flex-wrap items-center justify-between gap-3 md:gap-4">
+        <div className="flex gap-1.5 md:gap-2 p-1 bg-surface-container-low rounded-lg">
           {(["Anual", "Valor de Unidad"] as MetricMode[]).map((m) => (
             <button
               key={m}
@@ -113,7 +113,7 @@ export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
               </button>
             ))}
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors">
+          <button className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors">
             <span className="material-symbols-outlined text-sm">calendar_today</span>
             Personalizado
           </button>
@@ -121,8 +121,8 @@ export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
       </div>
 
       {/* Chart Card */}
-      <div className="bg-surface-container-lowest rounded-xl p-8 shadow-ambient">
-        <div className="flex items-center justify-between mb-8">
+      <div className="bg-surface-container-lowest rounded-xl p-4 md:p-8 shadow-ambient">
+        <div className="flex items-center justify-between mb-4 md:mb-8">
           <div className="flex flex-wrap gap-4">
             {codigos.map((codigo, i) => (
               <button
@@ -150,7 +150,7 @@ export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
           </div>
         </div>
 
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={280} className="md:!h-[400px]">
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="4" stroke="#c5c5d3" opacity={0.15} />
             <XAxis

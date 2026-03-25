@@ -61,7 +61,7 @@ export function FeedbackBubble() {
       </button>
 
       {open && (
-        <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 w-80 bg-surface-container-lowest rounded-xl shadow-ambient-hover p-4 z-50">
+        <div className="absolute top-full mt-2 right-0 sm:left-1/2 sm:-translate-x-1/2 w-72 sm:w-80 bg-surface-container-lowest rounded-xl shadow-ambient-hover p-4 z-50">
           <textarea
             ref={textareaRef}
             value={message}

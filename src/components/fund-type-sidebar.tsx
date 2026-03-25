@@ -54,47 +54,79 @@ export function FundTypeSidebar({
   const sorted = [...items].sort((a, b) => categoryIndex(a) - categoryIndex(b));
 
   return (
-    <aside className="h-screen w-64 sticky top-16 left-0 bg-surface flex-col gap-y-2 p-4 hidden lg:flex">
-      <div className="space-y-1">
+    <>
+      {/* Mobile: horizontal scrollable pills */}
+      <div className="lg:hidden overflow-x-auto no-scrollbar px-4 py-3 flex gap-2 sticky top-12 z-40 bg-surface-container-lowest/95 backdrop-blur-sm border-b border-outline-variant/10">
+        <button
+          onClick={() => onItemChange("")}
+          className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
+            selectedItem === ""
+              ? "bg-primary text-on-primary"
+              : "bg-surface-container-low text-on-surface-variant"
+          }`}
+        >
+          Todos ({totalCount})
+        </button>
         {sorted.map((item) => (
           <button
             key={item}
             onClick={() => onItemChange(item)}
-            className={`w-full text-left rounded-lg p-3 flex items-center gap-3 cursor-pointer transition-all ${
+            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors flex items-center gap-1.5 ${
               selectedItem === item
-                ? "bg-surface-container-lowest text-primary shadow-ambient font-bold"
-                : "text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1"
+                ? "bg-primary text-on-primary"
+                : "bg-surface-container-low text-on-surface-variant"
             }`}
           >
-            <span className="material-symbols-outlined">{getIcon(item)}</span>
-            <span className="text-sm font-semibold truncate">{getLabel(item)}</span>
-            <span className="ml-auto text-xs opacity-60 tabular-nums">{counts.get(item) ?? 0}</span>
+            <span className="material-symbols-outlined text-sm">{getIcon(item)}</span>
+            {getLabel(item)}
+            <span className="opacity-70">({counts.get(item) ?? 0})</span>
           </button>
         ))}
       </div>
 
-      <hr className="border-outline-variant/40 my-2" />
-
-      <button
-        onClick={() => onItemChange("")}
-        className={`w-full text-left rounded-lg p-3 flex items-center gap-3 cursor-pointer transition-all ${
-          selectedItem === ""
-            ? "bg-surface-container-lowest text-primary shadow-ambient font-bold"
-            : "text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1"
-        }`}
-      >
-        <span className="material-symbols-outlined">list_alt</span>
-        <span className="text-sm font-semibold">Todos los Fondos</span>
-        <span className="ml-auto text-xs opacity-60 tabular-nums">{totalCount}</span>
-      </button>
-
-      {fechaCorte && (
-        <div className="mt-auto pt-4 px-1">
-          <p className="text-[11px] text-on-surface-variant/50 leading-tight">
-            Datos al {formatDate(fechaCorte)}
-          </p>
+      {/* Desktop: sidebar */}
+      <aside className="h-screen w-64 sticky top-16 left-0 bg-surface flex-col gap-y-2 p-4 hidden lg:flex">
+        <div className="space-y-1">
+          {sorted.map((item) => (
+            <button
+              key={item}
+              onClick={() => onItemChange(item)}
+              className={`w-full text-left rounded-lg p-3 flex items-center gap-3 cursor-pointer transition-all ${
+                selectedItem === item
+                  ? "bg-surface-container-lowest text-primary shadow-ambient font-bold"
+                  : "text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1"
+              }`}
+            >
+              <span className="material-symbols-outlined">{getIcon(item)}</span>
+              <span className="text-sm font-semibold truncate">{getLabel(item)}</span>
+              <span className="ml-auto text-xs opacity-60 tabular-nums">{counts.get(item) ?? 0}</span>
+            </button>
+          ))}
         </div>
-      )}
-    </aside>
+
+        <hr className="border-outline-variant/40 my-2" />
+
+        <button
+          onClick={() => onItemChange("")}
+          className={`w-full text-left rounded-lg p-3 flex items-center gap-3 cursor-pointer transition-all ${
+            selectedItem === ""
+              ? "bg-surface-container-lowest text-primary shadow-ambient font-bold"
+              : "text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1"
+          }`}
+        >
+          <span className="material-symbols-outlined">list_alt</span>
+          <span className="text-sm font-semibold">Todos los Fondos</span>
+          <span className="ml-auto text-xs opacity-60 tabular-nums">{totalCount}</span>
+        </button>
+
+        {fechaCorte && (
+          <div className="mt-auto pt-4 px-1">
+            <p className="text-[11px] text-on-surface-variant/50 leading-tight">
+              Datos al {formatDate(fechaCorte)}
+            </p>
+          </div>
+        )}
+      </aside>
+    </>
   );
 }

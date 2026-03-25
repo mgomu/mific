@@ -6,7 +6,7 @@ import { Header } from "@/components/header";
 import { FundTypeSidebar } from "@/components/fund-type-sidebar";
 import { RankingTable, type SortField, type SortDir } from "@/components/ranking-table";
 import { ComparisonBar } from "@/components/comparison-bar";
-import { toSentenceCase } from "@/lib/format";
+import { formatDate, toSentenceCase } from "@/lib/format";
 
 const PAGE_SIZE = 50;
 
@@ -105,7 +105,7 @@ export function RankingClient({
   return (
     <>
       <Header showSearch={false} />
-      <div className="flex pt-20 min-h-screen">
+      <div className="flex flex-col lg:flex-row pt-14 lg:pt-20 min-h-screen">
         <FundTypeSidebar
           items={subtipos}
           selectedItem={subtipo}
@@ -114,32 +114,39 @@ export function RankingClient({
           fechaCorte={funds[0]?.fechaCorte}
         />
 
-        <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
+        <main className="flex-1 px-4 py-4 md:p-10 max-w-7xl mx-auto w-full">
 
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-primary mb-2">
+          <div className="mb-4 md:mb-6">
+            <h1 className="text-lg md:text-2xl font-bold text-primary mb-1 md:mb-2">
               Ranking de Fondos de Inversión Colectiva y Fondos de Capital Privado colombianos
             </h1>
-            <p className="text-sm text-on-surface-variant">
+            <p className="text-xs md:text-sm text-on-surface-variant">
               Seleccione hasta cinco fondos para comparar.
             </p>
-            <p className="text-sm text-on-surface-variant mt-2">
+            <p className="text-xs md:text-sm text-on-surface-variant mt-1 md:mt-2">
               Ingrese a un fondo específico para revisar sus principales indicadores.
             </p>
           </div>
 
-          {/* Search */}
-          <div className="relative mb-4">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">
-              search
-            </span>
-            <input
-              type="text"
-              className="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm w-full max-w-sm focus:ring-2 focus:ring-primary/20 transition-all"
-              placeholder="Buscar fondos..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+          {/* Search + Cut Date */}
+          <div className="flex items-center justify-between gap-4 mb-4">
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">
+                search
+              </span>
+              <input
+                type="text"
+                className="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm w-full max-w-sm focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="Buscar fondos..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            {funds[0]?.fechaCorte && (
+              <p className="text-xs text-on-surface-variant/60 whitespace-nowrap">
+                Datos al {formatDate(funds[0].fechaCorte)}
+              </p>
+            )}
           </div>
 
           {/* Table Card */}

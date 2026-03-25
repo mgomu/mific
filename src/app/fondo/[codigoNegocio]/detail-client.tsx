@@ -14,7 +14,7 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
   return (
     <>
       <Header showSearch={false} />
-      <main className="pt-28 pb-12 px-6 max-w-7xl mx-auto min-h-screen">
+      <main className="pt-20 md:pt-28 pb-12 px-4 md:px-6 max-w-7xl mx-auto min-h-screen">
         {/* Fund Header Section */}
         <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
@@ -25,29 +25,30 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
               <span className="material-symbols-outlined text-sm">arrow_back</span>
               <span className="text-sm font-medium">Volver a fondos</span>
             </Link>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-primary font-headline">
+            <h1 className="text-2xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-primary font-headline">
               {toSentenceCase(latest.nombrePatrimonio)}
             </h1>
           </div>
           <div className="flex gap-3">
             <Link
               href={`/comparar?ids=${latest.codigoNegocio}`}
-              className="flex items-center gap-2 bg-surface-container-highest text-primary px-6 py-3 rounded-lg font-bold hover:bg-surface-container-high transition-colors"
+              className="flex items-center gap-2 bg-surface-container-highest text-primary px-4 md:px-6 py-2.5 md:py-3 rounded-lg font-bold text-sm md:text-base hover:bg-surface-container-high transition-colors"
             >
-              <span className="material-symbols-outlined">add_circle</span>
-              Agregar a comparación
+              <span className="material-symbols-outlined text-xl">add_circle</span>
+              <span className="hidden sm:inline">Agregar a comparación</span>
+              <span className="sm:hidden">Comparar</span>
             </Link>
           </div>
         </header>
 
         {/* 4 Metric Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-surface-container-lowest p-6 rounded-xl">
-            <p className="text-sm font-semibold text-on-surface-variant mb-4 uppercase tracking-wider">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
+          <div className="bg-surface-container-lowest p-4 md:p-6 rounded-xl">
+            <p className="text-xs md:text-sm font-semibold text-on-surface-variant mb-2 md:mb-4 uppercase tracking-wider">
               Valor de la unidad
             </p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-primary tabular-nums">
+            <div className="flex items-baseline gap-1 md:gap-2 flex-wrap">
+              <span className="text-xl md:text-3xl font-bold text-primary tabular-nums">
                 {formatCOP(latest.valorUnidad)}
               </span>
               <span className="text-xs font-bold text-secondary flex items-center">
@@ -60,54 +61,54 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
             </p>
           </div>
 
-          <div className="bg-surface-container-lowest p-6 rounded-xl">
-            <p className="text-sm font-semibold text-on-surface-variant mb-4 uppercase tracking-wider">
+          <div className="bg-surface-container-lowest p-4 md:p-6 rounded-xl">
+            <p className="text-xs md:text-sm font-semibold text-on-surface-variant mb-2 md:mb-4 uppercase tracking-wider">
               Rentabilidad Efectiva Anual
             </p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-secondary tabular-nums">
+            <div className="flex items-baseline gap-1 md:gap-2">
+              <span className="text-xl md:text-3xl font-bold text-secondary tabular-nums">
                 {latest.rentabilidadAnual.toFixed(2)}%
               </span>
               <span className="text-xs font-bold text-secondary">E.A.</span>
             </div>
-            <p className="text-xs text-on-surface-variant mt-2">
+            <p className="text-[10px] md:text-xs text-on-surface-variant mt-1 md:mt-2">
               Promedio últimos 12 meses
             </p>
           </div>
 
-          <div className="bg-surface-container-lowest p-6 rounded-xl">
-            <p className="text-sm font-semibold text-on-surface-variant mb-4 uppercase tracking-wider">
+          <div className="bg-surface-container-lowest p-4 md:p-6 rounded-xl">
+            <p className="text-xs md:text-sm font-semibold text-on-surface-variant mb-2 md:mb-4 uppercase tracking-wider">
               Valor total del fondo
             </p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-on-surface tabular-nums">
+            <div className="flex items-baseline gap-1 md:gap-2 flex-wrap">
+              <span className="text-xl md:text-3xl font-bold text-on-surface tabular-nums">
                 {formatCompactCOP(latest.valorFondo)}
               </span>
               <span className="text-xs font-medium text-on-surface-variant">COP</span>
             </div>
-            <p className="text-xs text-on-surface-variant mt-2">
+            <p className="text-[10px] md:text-xs text-on-surface-variant mt-1 md:mt-2">
               Patrimonio bajo gestión
             </p>
           </div>
 
-          <div className="bg-surface-container-lowest p-6 rounded-xl">
-            <p className="text-sm font-semibold text-on-surface-variant mb-4 uppercase tracking-wider">
+          <div className="bg-surface-container-lowest p-4 md:p-6 rounded-xl">
+            <p className="text-xs md:text-sm font-semibold text-on-surface-variant mb-2 md:mb-4 uppercase tracking-wider">
               N° de inversionistas
             </p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-on-surface tabular-nums">
+            <div className="flex items-baseline gap-1 md:gap-2">
+              <span className="text-xl md:text-3xl font-bold text-on-surface tabular-nums">
                 {formatNumber(latest.numeroInversionistas)}
               </span>
-              <span className="material-symbols-outlined text-on-surface-variant text-xl">groups</span>
+              <span className="material-symbols-outlined text-on-surface-variant text-base md:text-xl">groups</span>
             </div>
-            <p className="text-xs text-on-surface-variant mt-2">
+            <p className="text-[10px] md:text-xs text-on-surface-variant mt-1 md:mt-2">
               Activos actualmente
             </p>
           </div>
         </div>
 
         {/* Chart + Sidebar */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8 items-start">
           <div className="lg:col-span-2">
             <HistoryChart data={history} />
           </div>
@@ -143,9 +144,9 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
       </main>
 
       {/* Floating Compare Button + Expandable Panel */}
-      <div className="fixed bottom-8 right-8 z-40 flex flex-col items-end gap-3">
+      <div className="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-40 flex flex-col items-end gap-3">
         {compareOpen && (
-          <div className="backdrop-blur-xl border py-4 px-6 rounded-2xl shadow-2xl w-[340px]" style={{ backgroundColor: "rgba(255,255,255,0.9)", borderColor: "rgba(220,225,255,0.3)" }}>
+          <div className="backdrop-blur-xl border py-4 px-4 md:px-6 rounded-2xl shadow-2xl w-[280px] md:w-[340px]" style={{ backgroundColor: "rgba(255,255,255,0.9)", borderColor: "rgba(220,225,255,0.3)" }}>
             <div className="flex items-center gap-4 mb-4">
               <div className="flex -space-x-3">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 border-white text-xs" style={{ backgroundColor: "#006a61", color: "#ffffff" }}>

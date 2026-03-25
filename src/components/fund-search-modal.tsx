@@ -51,7 +51,7 @@ export function FundSearchModal({
     >
       <div className="absolute inset-0 bg-black/40" />
       <div
-        className="relative bg-surface-container-lowest rounded-2xl w-[480px] max-h-[80vh] p-6 shadow-2xl"
+        className="relative bg-surface-container-lowest rounded-2xl w-[calc(100vw-2rem)] sm:w-[480px] max-h-[80vh] p-4 sm:p-6 shadow-2xl mx-4 sm:mx-0"
         onClick={(e) => e.stopPropagation()}
       >
         <button

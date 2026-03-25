@@ -153,13 +153,13 @@ export function CompararClient() {
   return (
     <>
       <Header showSearch={false} />
-      <main className="pt-28 pb-20 px-6 max-w-screen-2xl mx-auto min-h-screen">
+      <main className="pt-20 md:pt-28 pb-20 px-4 md:px-6 max-w-screen-2xl mx-auto min-h-screen">
         {/* Header Section */}
-        <header className="mb-10">
-          <h1 className="text-4xl font-extrabold text-primary tracking-tight mb-2 font-headline">
+        <header className="mb-6 md:mb-10">
+          <h1 className="text-2xl md:text-4xl font-extrabold text-primary tracking-tight mb-1 md:mb-2 font-headline">
             Comparación de Fondos
           </h1>
-          <p className="text-on-surface-variant font-medium">
+          <p className="text-sm md:text-base text-on-surface-variant font-medium">
             Analiza y compara el rendimiento histórico de tus selecciones.
           </p>
         </header>
@@ -185,7 +185,7 @@ export function CompararClient() {
             <Skeleton className="h-[300px] w-full" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8">
             {/* Left Column: Chart */}
             <div className="lg:col-span-9 space-y-6">
               <ComparisonChart fundData={fundData} fundNames={fundNames} />
@@ -227,7 +227,7 @@ export function CompararClient() {
                           </div>
                           <button
                             onClick={() => removeFund(id)}
-                            className="shrink-0 w-6 h-6 flex items-center justify-center rounded-full text-on-surface-variant/60 hover:bg-error/10 hover:text-error opacity-0 group-hover:opacity-100 transition-all"
+                            className="shrink-0 w-6 h-6 flex items-center justify-center rounded-full text-on-surface-variant/60 hover:bg-error/10 hover:text-error opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all"
                           >
                             <span className="material-symbols-outlined text-[16px]">close</span>
                           </button>
@@ -269,21 +269,21 @@ export function CompararClient() {
 
       {/* Comparison Float Bar */}
       {ids.length >= 2 && !loading && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-2xl z-40 px-6">
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-4 shadow-ambient border border-primary-fixed/20 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex -space-x-3">
+        <div className="fixed bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 w-full max-w-2xl z-40 px-3 md:px-6">
+          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-3 md:p-4 shadow-ambient border border-primary-fixed/20 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 md:gap-4 min-w-0">
+              <div className="flex -space-x-2 md:-space-x-3 shrink-0">
                 {ids.map((id, i) => (
                   <div
                     key={id}
-                    className="w-10 h-10 rounded-full border-2 border-surface flex items-center justify-center text-on-primary text-[10px] font-bold"
+                    className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-surface flex items-center justify-center text-on-primary text-[8px] md:text-[10px] font-bold"
                     style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
                   >
                     {(fundNames.get(id) ?? id).slice(0, 3).toUpperCase()}
                   </div>
                 ))}
               </div>
-              <div className="hidden sm:block">
+              <div className="hidden sm:block min-w-0">
                 <p className="text-sm font-bold text-primary leading-none">
                   Comparando {ids.length} fondos
                 </p>
@@ -292,7 +292,7 @@ export function CompararClient() {
                 </p>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 shrink-0">
               <button
                 onClick={() =>
                   generateComparisonPDF({
@@ -302,9 +302,10 @@ export function CompararClient() {
                     latestPerFund,
                   })
                 }
-                className="bg-gradient-to-r from-primary to-primary-container text-on-primary px-6 py-2 rounded-full text-sm font-bold shadow-ambient hover:opacity-90 active:scale-95 transition-all"
+                className="bg-gradient-to-r from-primary to-primary-container text-on-primary px-4 md:px-6 py-2 rounded-full text-xs md:text-sm font-bold shadow-ambient hover:opacity-90 active:scale-95 transition-all flex items-center gap-1.5"
               >
-                Generar Reporte PDF
+                <span className="material-symbols-outlined text-sm sm:hidden">picture_as_pdf</span>
+                <span className="hidden sm:inline">Generar Reporte PDF</span>
               </button>
             </div>
           </div>
