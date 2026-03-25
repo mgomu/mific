@@ -13,7 +13,6 @@ export function Header({
   showSearch?: boolean;
 }) {
   const pathname = usePathname();
-  const isExplore = pathname === "/";
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-surface-container-lowest backdrop-blur-xl">
@@ -25,18 +24,6 @@ export function Header({
           >
             MiFIC
           </Link>
-          <div className="hidden md:flex items-center gap-6">
-            <Link
-              href="/"
-              className={`transition-colors ${
-                isExplore
-                  ? "text-primary font-bold border-b-2 border-primary pb-1"
-                  : "text-on-surface-variant hover:text-primary transition-colors"
-              }`}
-            >
-              Explorar Fondos
-            </Link>
-          </div>
         </div>
         <div className="flex items-center gap-4">
           {showSearch && (

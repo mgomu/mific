@@ -16,7 +16,11 @@ export function RankingClient({
   funds: FundRecord[];
 }) {
   const [search, setSearch] = useState("");
-  const [subtipo, setSubtipo] = useState("");
+  const defaultSubtipo = useMemo(
+    () => funds.find((f) => f.nombreSubtipoPatrimonio.toUpperCase().includes("GENERAL"))?.nombreSubtipoPatrimonio ?? "",
+    [funds]
+  );
+  const [subtipo, setSubtipo] = useState(defaultSubtipo);
   const [administradoras_sel, setAdministradoras_sel] = useState<string[]>([]);
   const [sortField, setSortField] = useState<SortField>("rentabilidadAnual");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
