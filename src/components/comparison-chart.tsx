@@ -89,7 +89,7 @@ export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
               onClick={() => setMetricMode(m)}
               className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${
                 metricMode === m
-                  ? "bg-surface-container-lowest text-primary shadow-sm"
+                  ? "bg-surface-container-lowest text-primary shadow-ambient"
                   : "text-on-surface-variant hover:bg-surface transition-colors"
               }`}
             >

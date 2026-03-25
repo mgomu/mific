@@ -262,7 +262,7 @@ export function CompararClient() {
                 {ids.map((id, i) => (
                   <div
                     key={id}
-                    className="w-10 h-10 rounded-full border-2 border-white flex items-center justify-center text-white text-[10px] font-bold"
+                    className="w-10 h-10 rounded-full border-2 border-surface flex items-center justify-center text-on-primary text-[10px] font-bold"
                     style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
                   >
                     {(fundNames.get(id) ?? id).slice(0, 3).toUpperCase()}
