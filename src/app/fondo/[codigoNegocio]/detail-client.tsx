@@ -3,7 +3,6 @@
 import Link from "next/link";
 import type { FundRecord } from "@/lib/types";
 import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { HistoryChart } from "@/components/history-chart";
 import { formatCOP, formatNumber, formatCompactCOP, formatDate, toSentenceCase } from "@/lib/format";
 
@@ -199,7 +198,6 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
         </div>
       </div>
 
-      <Footer fechaCorte={formatDate(latest.fechaCorte)} />
     </>
   );
 }

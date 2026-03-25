@@ -4,8 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { FundRecord } from "@/lib/types";
 import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { toSentenceCase } from "@/lib/format";
+import { mergeDuplicateRecords } from "@/lib/api";
 import { ComparisonChart } from "@/components/comparison-chart";
 import { ComparisonTable } from "@/components/comparison-table";
 import { FundSearchModal } from "@/components/fund-search-modal";
@@ -41,26 +41,28 @@ export function CompararClient() {
       if (!res.ok) throw new Error("API error");
       const raw = await res.json();
 
+      const parsed = raw.map((r: any) => ({
+        codigoNegocio: r.codigo_negocio,
+        nombreEntidad: r.nombre_entidad,
+        nombrePatrimonio: r.nombre_patrimonio,
+        nombreTipoPatrimonio: r.nombre_tipo_patrimonio,
+        nombreSubtipoPatrimonio: r.nombre_subtipo_patrimonio,
+        valorUnidad: parseFloat(r.valor_unidad_operaciones) || 0,
+        valorFondo: parseFloat(r.valor_fondo_cierre_dia_t) || 0,
+        numeroInversionistas: parseInt(r.numero_inversionistas, 10) || 0,
+        rentabilidadDiaria: parseFloat(r.rentabilidad_diaria) || 0,
+        rentabilidadMensual: parseFloat(r.rentabilidad_mensual) || 0,
+        rentabilidadSemestral: parseFloat(r.rentabilidad_semestral) || 0,
+        rentabilidadAnual: parseFloat(r.rentabilidad_anual) || 0,
+        fechaCorte: new Date(r.fecha_corte),
+        rendimientosAbonados: parseFloat(r.rendimientos_abonados) || 0,
+        aportesRecibidos: parseFloat(r.aportes_recibidos) || 0,
+        retirosRedenciones: parseFloat(r.retiros_redenciones) || 0,
+      } as FundRecord));
+      const merged = mergeDuplicateRecords(parsed);
+
       const grouped = new Map<string, FundRecord[]>();
-      for (const r of raw) {
-        const record: FundRecord = {
-          codigoNegocio: r.codigo_negocio,
-          nombreEntidad: r.nombre_entidad,
-          nombrePatrimonio: r.nombre_patrimonio,
-          nombreTipoPatrimonio: r.nombre_tipo_patrimonio,
-          nombreSubtipoPatrimonio: r.nombre_subtipo_patrimonio,
-          valorUnidad: parseFloat(r.valor_unidad_operaciones_dia_t) || 0,
-          valorFondo: parseFloat(r.valor_fondo_cierre_dia_t) || 0,
-          numeroInversionistas: parseInt(r.numero_inversionistas, 10) || 0,
-          rentabilidadDiaria: parseFloat(r.rentabilidad_diaria) || 0,
-          rentabilidadMensual: parseFloat(r.rentabilidad_mensual) || 0,
-          rentabilidadSemestral: parseFloat(r.rentabilidad_semestral) || 0,
-          rentabilidadAnual: parseFloat(r.rentabilidad_anual) || 0,
-          fechaCorte: new Date(r.fecha_corte),
-          rendimientosAbonados: parseFloat(r.rendimientos_abonados) || 0,
-          aportesRecibidos: parseFloat(r.aportes_recibidos) || 0,
-          retirosRedenciones: parseFloat(r.retiros_redenciones) || 0,
-        };
+      for (const record of merged) {
         if (!grouped.has(record.codigoNegocio)) {
           grouped.set(record.codigoNegocio, []);
         }
@@ -92,26 +94,25 @@ export function CompararClient() {
           `https://www.datos.gov.co/resource/qhpu-8ixx.json?$where=fecha_corte='${latestDate}'&$limit=5000`
         );
         const raw = await res.json();
-        setAllFunds(
-          raw.map((r: any) => ({
-            codigoNegocio: r.codigo_negocio,
-            nombreEntidad: r.nombre_entidad,
-            nombrePatrimonio: r.nombre_patrimonio,
-            nombreTipoPatrimonio: r.nombre_tipo_patrimonio ?? "",
-            nombreSubtipoPatrimonio: r.nombre_subtipo_patrimonio ?? "",
-            valorUnidad: parseFloat(r.valor_unidad_operaciones_dia_t) || 0,
-            valorFondo: parseFloat(r.valor_fondo_cierre_dia_t) || 0,
-            numeroInversionistas: parseInt(r.numero_inversionistas, 10) || 0,
-            rentabilidadDiaria: parseFloat(r.rentabilidad_diaria) || 0,
-            rentabilidadMensual: parseFloat(r.rentabilidad_mensual) || 0,
-            rentabilidadSemestral: parseFloat(r.rentabilidad_semestral) || 0,
-            rentabilidadAnual: parseFloat(r.rentabilidad_anual) || 0,
-            fechaCorte: new Date(r.fecha_corte),
-            rendimientosAbonados: parseFloat(r.rendimientos_abonados) || 0,
-            aportesRecibidos: parseFloat(r.aportes_recibidos) || 0,
-            retirosRedenciones: parseFloat(r.retiros_redenciones) || 0,
-          }))
-        );
+        const allParsed = raw.map((r: any) => ({
+          codigoNegocio: r.codigo_negocio,
+          nombreEntidad: r.nombre_entidad,
+          nombrePatrimonio: r.nombre_patrimonio,
+          nombreTipoPatrimonio: r.nombre_tipo_patrimonio ?? "",
+          nombreSubtipoPatrimonio: r.nombre_subtipo_patrimonio ?? "",
+          valorUnidad: parseFloat(r.valor_unidad_operaciones) || 0,
+          valorFondo: parseFloat(r.valor_fondo_cierre_dia_t) || 0,
+          numeroInversionistas: parseInt(r.numero_inversionistas, 10) || 0,
+          rentabilidadDiaria: parseFloat(r.rentabilidad_diaria) || 0,
+          rentabilidadMensual: parseFloat(r.rentabilidad_mensual) || 0,
+          rentabilidadSemestral: parseFloat(r.rentabilidad_semestral) || 0,
+          rentabilidadAnual: parseFloat(r.rentabilidad_anual) || 0,
+          fechaCorte: new Date(r.fecha_corte),
+          rendimientosAbonados: parseFloat(r.rendimientos_abonados) || 0,
+          aportesRecibidos: parseFloat(r.aportes_recibidos) || 0,
+          retirosRedenciones: parseFloat(r.retiros_redenciones) || 0,
+        } as FundRecord));
+        setAllFunds(mergeDuplicateRecords(allParsed));
       } catch {
         // silently fail
       }
@@ -289,7 +290,6 @@ export function CompararClient() {
         </div>
       )}
 
-      <Footer />
       <FundSearchModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}

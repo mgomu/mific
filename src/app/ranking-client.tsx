@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import type { FundRecord } from "@/lib/types";
 import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { FundTypeSidebar } from "@/components/fund-type-sidebar";
 import { RankingTable, type SortField, type SortDir } from "@/components/ranking-table";
 import { ComparisonBar } from "@/components/comparison-bar";
@@ -133,41 +132,10 @@ export function RankingClient({
         />
 
         <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
-          {/* Page Header */}
-          <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div>
-              <h1 className="font-display text-4xl font-extrabold text-primary tracking-tight">
-                Ranking de Fondos de Inversión
-              </h1>
-              <p className="text-on-surface-variant mt-2 max-w-xl">
-                Compara el rendimiento de los principales FICs (Fondos de Inversión Colectiva) de Colombia con datos transparentes en tiempo real.
-              </p>
-            </div>
-            {fechaCorte && (
-              <div className="bg-surface-container px-4 py-2 rounded-lg flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-sm">calendar_today</span>
-                <span className="text-sm font-semibold text-primary">{fechaCorte}</span>
-              </div>
-            )}
-          </header>
 
 
           {/* Table Card */}
           <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
-            <div className="p-4 border-b border-surface-container-low flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <h3 className="font-bold text-primary">Ranking de Todos los Fondos</h3>
-                <span className="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-bold">EN VIVO</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <button className="flex items-center gap-2 text-xs font-semibold text-on-surface-variant hover:text-primary p-2">
-                  <span className="material-symbols-outlined text-lg">sort</span> Ordenar
-                </button>
-                <button className="flex items-center gap-2 text-xs font-semibold text-on-surface-variant hover:text-primary p-2">
-                  <span className="material-symbols-outlined text-lg">filter_list</span> Columnas
-                </button>
-              </div>
-            </div>
 
             {sorted.length === 0 ? (
               <div className="text-center py-20">
@@ -209,7 +177,6 @@ export function RankingClient({
         </main>
       </div>
 
-      <Footer fechaCorte={fechaCorte} />
       <ComparisonBar
         selectedFunds={selectedFunds}
         onRemove={(id) => toggleSelect(id)}

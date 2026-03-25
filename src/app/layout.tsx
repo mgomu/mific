@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-display", weight: ["700", "800"] });
 
 export const metadata: Metadata = {
-  title: "mific — Fondos de Inversión Colectiva en Colombia",
+  title: "MiFIC — Fondos de Inversión Colectiva en Colombia",
   description:
     "Compara fondos de inversión colectiva en Colombia. Ranking, detalle y comparador visual con datos de la Superintendencia Financiera.",
 };

@@ -24,6 +24,40 @@ function parseRecord(raw: SodaRawRecord): FundRecord {
   };
 }
 
+/**
+ * Merge duplicate records for the same fund+date (different tipo_participacion).
+ * Sums: inversionistas, valorFondo, rendimientos, aportes, retiros.
+ * Takes rates/unit value from the record with the most investors (main class).
+ */
+export function mergeDuplicateRecords(records: FundRecord[]): FundRecord[] {
+  const byKey = new Map<string, FundRecord[]>();
+  for (const r of records) {
+    const key = `${r.codigoNegocio}_${r.fechaCorte.toISOString()}`;
+    if (!byKey.has(key)) byKey.set(key, []);
+    byKey.get(key)!.push(r);
+  }
+
+  const merged: FundRecord[] = [];
+  for (const group of byKey.values()) {
+    if (group.length === 1) {
+      merged.push(group[0]);
+      continue;
+    }
+    const main = group.reduce((a, b) =>
+      b.numeroInversionistas > a.numeroInversionistas ? b : a
+    );
+    merged.push({
+      ...main,
+      numeroInversionistas: group.reduce((s, r) => s + r.numeroInversionistas, 0),
+      valorFondo: group.reduce((s, r) => s + r.valorFondo, 0),
+      rendimientosAbonados: group.reduce((s, r) => s + r.rendimientosAbonados, 0),
+      aportesRecibidos: group.reduce((s, r) => s + r.aportesRecibidos, 0),
+      retirosRedenciones: group.reduce((s, r) => s + r.retirosRedenciones, 0),
+    });
+  }
+  return merged;
+}
+
 async function sodaFetch(query: string): Promise<SodaRawRecord[]> {
   const url = `${BASE_URL}?${query}`;
   const headers: HeadersInit = {};
@@ -45,12 +79,7 @@ export async function fetchLatestFunds(): Promise<FundRecord[]> {
     `$where=fecha_corte='${latestDate}'&$limit=5000`
   );
   const parsed = records.map(parseRecord);
-  const seen = new Set<string>();
-  return parsed.filter((r) => {
-    if (seen.has(r.codigoNegocio)) return false;
-    seen.add(r.codigoNegocio);
-    return true;
-  });
+  return mergeDuplicateRecords(parsed);
 }
 
 export async function fetchFundHistory(
@@ -64,7 +93,7 @@ export async function fetchFundHistory(
   const records = await sodaFetch(
     `$where=codigo_negocio='${codigoNegocio}' AND fecha_corte>='${sinceStr}'&$order=fecha_corte ASC&$limit=5000`
   );
-  return records.map(parseRecord);
+  return mergeDuplicateRecords(records.map(parseRecord));
 }
 
 export async function fetchFundsComparison(
@@ -79,5 +108,5 @@ export async function fetchFundsComparison(
   const records = await sodaFetch(
     `$where=codigo_negocio in (${inClause}) AND fecha_corte>='${sinceStr}'&$order=fecha_corte ASC&$limit=50000`
   );
-  return records.map(parseRecord);
+  return mergeDuplicateRecords(records.map(parseRecord));
 }

@@ -14,13 +14,13 @@ import type { FundRecord } from "@/lib/types";
 import { formatShortDate } from "@/lib/format";
 import { CHART_COLORS } from "@/lib/chart-colors";
 
-type Metric = "rentabilidadAnual" | "rentabilidadMensual" | "rentabilidadSemestral" | "valorUnidad";
+type Metric = "rentabilidadAnual" | "valorUnidad";
 type Period = "1M" | "6M" | "YTD" | "1Y" | "MAX";
-type MetricMode = "Mensual" | "Anual";
+type MetricMode = "Anual" | "Valor de Unidad";
 
 const METRIC_MAP: Record<MetricMode, Metric> = {
-  Mensual: "rentabilidadMensual",
-  Anual: "rentabilidadAnual",
+  "Anual": "rentabilidadAnual",
+  "Valor de Unidad": "valorUnidad",
 };
 
 const PERIOD_DAYS: Record<Period, number | null> = {
@@ -37,7 +37,7 @@ interface ComparisonChartProps {
 }
 
 export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
-  const [metricMode, setMetricMode] = useState<MetricMode>("Mensual");
+  const [metricMode, setMetricMode] = useState<MetricMode>("Anual");
   const [period, setPeriod] = useState<Period>("YTD");
   const [hiddenLines, setHiddenLines] = useState<Set<string>>(new Set());
 
@@ -83,7 +83,7 @@ export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
       {/* Controls Card */}
       <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-wrap items-center justify-between gap-4">
         <div className="flex gap-2 p-1 bg-surface-container-low rounded-lg">
-          {(["Mensual", "Anual"] as MetricMode[]).map((m) => (
+          {(["Anual", "Valor de Unidad"] as MetricMode[]).map((m) => (
             <button
               key={m}
               onClick={() => setMetricMode(m)}
@@ -148,9 +148,6 @@ export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
               </button>
             ))}
           </div>
-          <button className="text-primary text-sm font-bold hover:underline flex items-center gap-1">
-            <span className="material-symbols-outlined text-sm">download</span> Exportar
-          </button>
         </div>
 
         <ResponsiveContainer width="100%" height={400}>

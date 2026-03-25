@@ -7,7 +7,6 @@ interface FundTypeSidebarProps {
   selectedItem: string;
   onItemChange: (item: string) => void;
   counts: Map<string, number>;
-  onReset?: () => void;
 }
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -32,10 +31,8 @@ export function FundTypeSidebar({
   selectedItem,
   onItemChange,
   counts,
-  onReset,
 }: FundTypeSidebarProps) {
   const totalCount = Array.from(counts.values()).reduce((a, b) => a + b, 0);
-  const hasFilters = !!selectedItem;
 
   return (
     <aside className="h-screen w-64 sticky top-16 left-0 bg-surface-container-low flex-col gap-y-2 p-4 hidden lg:flex">
@@ -74,23 +71,7 @@ export function FundTypeSidebar({
         ))}
       </div>
 
-      {hasFilters && onReset && (
-        <button
-          onClick={onReset}
-          className="mt-auto mb-4 w-full py-2 px-4 text-sm font-bold text-primary border border-primary/10 rounded-lg hover:bg-white hover:shadow-sm transition-all active:scale-95"
-        >
-          Limpiar Filtros
-        </button>
-      )}
 
-      <div className="flex flex-col gap-1 border-t border-outline-variant/20 pt-4 mt-auto">
-        <span className="text-xs font-semibold text-on-surface-variant/60 hover:text-primary flex items-center gap-2 p-1 cursor-pointer">
-          <span className="material-symbols-outlined text-sm">help</span> Centro de Ayuda
-        </span>
-        <span className="text-xs font-semibold text-on-surface-variant/60 hover:text-primary flex items-center gap-2 p-1 cursor-pointer">
-          <span className="material-symbols-outlined text-sm">shield</span> Privacidad
-        </span>
-      </div>
     </aside>
   );
 }

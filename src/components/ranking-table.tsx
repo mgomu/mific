@@ -35,7 +35,7 @@ function SortHeader({
   const isActive = currentField === field;
   return (
     <th
-      className={`p-4 text-xs font-bold text-on-surface-variant/60 uppercase tracking-wider cursor-pointer select-none ${
+      className={`p-4 text-xs font-bold text-on-surface-variant/60 tracking-wider cursor-pointer select-none ${
         align === "right" ? "text-right" : ""
       }`}
       onClick={() => onSort(field)}
@@ -71,10 +71,10 @@ export function RankingTable({
               <span className="sr-only">Select</span>
             </th>
             <SortHeader label="Nombre del fondo" field="nombrePatrimonio" currentField={sortField} currentDir={sortDir} onSort={onSort} />
-            <th className="p-4 text-xs font-bold text-on-surface-variant/60 uppercase tracking-wider">
+            <th className="p-4 text-xs font-bold text-on-surface-variant/60 tracking-wider">
               Administradora
             </th>
-            <th className="p-4 text-xs font-bold text-on-surface-variant/60 uppercase tracking-wider">
+            <th className="p-4 text-xs font-bold text-on-surface-variant/60 tracking-wider">
               Tipo
             </th>
             <SortHeader label="Valor Unidad" field="valorUnidad" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />

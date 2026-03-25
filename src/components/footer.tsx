@@ -4,7 +4,7 @@ export function Footer({ fechaCorte }: { fechaCorte?: string }) {
       <div className="flex flex-col md:flex-row justify-between items-center px-8 w-full max-w-7xl mx-auto text-center md:text-left">
         <div className="mb-6 md:mb-0">
           <span className="text-lg font-bold text-on-surface-variant/40 font-display">
-            mific
+            MiFIC
           </span>
           <p className="text-xs text-on-surface-variant mt-2">
             Datos actualizados{fechaCorte ? ` al ${fechaCorte}` : ""}. Fuente:
@@ -24,7 +24,7 @@ export function Footer({ fechaCorte }: { fechaCorte?: string }) {
         </div>
       </div>
       <div className="mt-8 text-[10px] text-on-surface-variant/40 text-center uppercase tracking-widest font-medium">
-        &copy; {new Date().getFullYear()} mific Sistemas de Inteligencia Financiera.
+        &copy; {new Date().getFullYear()} MiFIC Sistemas de Inteligencia Financiera.
       </div>
     </footer>
   );

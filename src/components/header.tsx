@@ -32,7 +32,7 @@ export function Header({
             href="/"
             className="text-2xl font-bold tracking-tight text-primary font-display"
           >
-            mific
+            MiFIC
           </Link>
           <div className="hidden md:flex items-center gap-6">
             <Link
@@ -45,12 +45,6 @@ export function Header({
             >
               Explorar Fondos
             </Link>
-            <span className="text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
-              Análisis de Mercado
-            </span>
-            <span className="text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
-              Mi Portafolio
-            </span>
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -76,14 +70,6 @@ export function Header({
           >
             Comparar ({compareCount})
           </Link>
-          <div className="flex items-center gap-2 border-l border-outline-variant/30 pl-4">
-            <button className="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all">
-              <span className="material-symbols-outlined">notifications</span>
-            </button>
-            <button className="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all">
-              <span className="material-symbols-outlined">account_circle</span>
-            </button>
-          </div>
         </div>
       </div>
     </nav>

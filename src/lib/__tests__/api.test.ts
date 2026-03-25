@@ -11,7 +11,7 @@ const mockFundRecord = {
   nombre_patrimonio: "FIC Renta Sostenible",
   nombre_tipo_patrimonio: "FIC de tipo general",
   nombre_subtipo_patrimonio: "Abierto",
-  valor_unidad_operaciones_dia_t: "18240.37",
+  valor_unidad_operaciones: "18240.37",
   valor_fondo_cierre_dia_t: "75905000000",
   numero_inversionistas: "12458",
   rentabilidad_diaria: "0.02",
