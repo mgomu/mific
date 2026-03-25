@@ -11,6 +11,7 @@ import { ComparisonTable } from "@/components/comparison-table";
 import { FundSearchModal } from "@/components/fund-search-modal";
 import { Skeleton } from "@/components/skeleton";
 import { CHART_COLORS } from "@/lib/chart-colors";
+import { generateComparisonPDF } from "@/lib/generate-comparison-pdf";
 
 export function CompararClient() {
   const searchParams = useSearchParams();
@@ -152,7 +153,7 @@ export function CompararClient() {
   return (
     <>
       <Header showSearch={false} />
-      <main className="pt-24 pb-20 px-6 max-w-screen-2xl mx-auto min-h-screen">
+      <main className="pt-28 pb-20 px-6 max-w-screen-2xl mx-auto min-h-screen">
         {/* Header Section */}
         <header className="mb-10">
           <h1 className="text-4xl font-extrabold text-primary tracking-tight mb-2 font-headline">
@@ -192,52 +193,65 @@ export function CompararClient() {
 
             {/* Right Column: Selected Funds */}
             <div className="lg:col-span-3 space-y-6">
-              <div className="bg-surface-container-lowest rounded-xl p-6 h-full shadow-ambient">
-                <h2 className="text-lg font-bold text-primary mb-4 flex items-center justify-between font-headline">
-                  Fondos Seleccionados
-                  <span className="bg-primary-fixed text-primary px-2 py-0.5 rounded text-xs">
+              <div className="bg-surface-container-lowest rounded-xl p-5 h-full shadow-ambient">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-base font-extrabold text-on-surface font-headline tracking-tight">
+                    Fondos Seleccionados
+                  </h2>
+                  <span className="bg-primary text-on-primary text-[11px] font-bold tabular-nums min-w-[2rem] text-center px-2 py-0.5 rounded-full">
                     {ids.length}/5
                   </span>
-                </h2>
-                <div className="space-y-3">
-                  {ids.map((id, i) => (
-                    <div
-                      key={id}
-                      className="bg-surface-container-lowest p-3 rounded-lg shadow-ambient group"
-                      style={{ borderLeft: `4px solid ${CHART_COLORS[i % CHART_COLORS.length]}` }}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="text-xs font-bold text-primary">
-                            {toSentenceCase(fundEntities.get(id) ?? "")}
-                          </p>
-                          <p className="text-sm font-bold text-on-surface leading-tight">
-                            {toSentenceCase((fundNames.get(id) ?? id).slice(0, 30))}
-                          </p>
+                </div>
+                <div className="space-y-2.5">
+                  {ids.map((id, i) => {
+                    const color = CHART_COLORS[i % CHART_COLORS.length];
+                    const rent = latestPerFund.find((f) => f.codigoNegocio === id);
+                    return (
+                      <div
+                        key={id}
+                        className="relative bg-surface-container-low rounded-xl px-4 py-3.5 group hover:shadow-ambient transition-shadow overflow-hidden"
+                      >
+                        {/* Color accent bar */}
+                        <div
+                          className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full"
+                          style={{ backgroundColor: color }}
+                        />
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-[11px] font-semibold uppercase tracking-wide text-on-surface-variant truncate">
+                              {toSentenceCase(fundEntities.get(id) ?? "")}
+                            </p>
+                            <p className="text-[13px] font-bold text-on-surface leading-snug mt-0.5 line-clamp-2">
+                              {toSentenceCase((fundNames.get(id) ?? id).slice(0, 40))}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => removeFund(id)}
+                            className="shrink-0 w-6 h-6 flex items-center justify-center rounded-full text-on-surface-variant/60 hover:bg-error/10 hover:text-error opacity-0 group-hover:opacity-100 transition-all"
+                          >
+                            <span className="material-symbols-outlined text-[16px]">close</span>
+                          </button>
                         </div>
-                        <button
-                          onClick={() => removeFund(id)}
-                          className="text-on-surface-variant hover:text-error opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <span className="material-symbols-outlined text-lg">close</span>
-                        </button>
+                        <div className="mt-2.5 pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">
+                          <span className="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant/70">
+                            Rent. YTD
+                          </span>
+                          <span
+                            className="text-sm font-extrabold tabular-nums"
+                            style={{ color }}
+                          >
+                            {rent ? `+${rent.rentabilidadAnual.toFixed(1)}%` : "—"}
+                          </span>
+                        </div>
                       </div>
-                      <div className="mt-2 flex items-center justify-between pt-2 mt-2">
-                        <span className="text-[10px] uppercase font-bold text-on-surface-variant">Rent. YTD</span>
-                        <span className="text-xs font-bold text-tertiary">
-                          {latestPerFund.find((f) => f.codigoNegocio === id)
-                            ? `+${latestPerFund.find((f) => f.codigoNegocio === id)!.rentabilidadAnual.toFixed(1)}%`
-                            : "—"}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                   {ids.length < 5 && (
                     <button
                       onClick={() => setModalOpen(true)}
-                      className="w-full border-2 border-dashed border-outline-variant/50 rounded-lg p-4 text-on-surface-variant hover:bg-surface-container-lowest hover:text-primary transition-all flex flex-col items-center justify-center gap-1 group"
+                      className="w-full border-2 border-dashed border-outline-variant/30 rounded-xl p-4 text-on-surface-variant/60 hover:border-primary/40 hover:text-primary hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1 group"
                     >
-                      <span className="material-symbols-outlined">add_circle</span>
+                      <span className="material-symbols-outlined text-xl">add_circle</span>
                       <span className="text-xs font-bold">Agregar Fondo</span>
                     </button>
                   )}
@@ -279,10 +293,17 @@ export function CompararClient() {
               </div>
             </div>
             <div className="flex gap-2">
-              <button className="bg-surface-container-high px-4 py-2 rounded-full text-sm font-bold text-primary hover:bg-surface-container-highest transition-colors">
-                Compartir
-              </button>
-              <button className="bg-gradient-to-r from-primary to-primary-container text-on-primary px-6 py-2 rounded-full text-sm font-bold shadow-ambient hover:opacity-90 active:scale-95 transition-all">
+              <button
+                onClick={() =>
+                  generateComparisonPDF({
+                    fundData,
+                    fundNames,
+                    fundEntities,
+                    latestPerFund,
+                  })
+                }
+                className="bg-gradient-to-r from-primary to-primary-container text-on-primary px-6 py-2 rounded-full text-sm font-bold shadow-ambient hover:opacity-90 active:scale-95 transition-all"
+              >
                 Generar Reporte PDF
               </button>
             </div>

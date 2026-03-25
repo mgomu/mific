@@ -14,7 +14,7 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
   return (
     <>
       <Header showSearch={false} />
-      <main className="pt-24 pb-12 px-6 max-w-7xl mx-auto min-h-screen">
+      <main className="pt-28 pb-12 px-6 max-w-7xl mx-auto min-h-screen">
         {/* Fund Header Section */}
         <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">

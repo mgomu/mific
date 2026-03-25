@@ -108,12 +108,13 @@ export function RankingClient({
         searchValue={search}
         onSearchChange={setSearch}
       />
-      <div className="flex pt-16 min-h-screen">
+      <div className="flex pt-20 min-h-screen">
         <FundTypeSidebar
           items={subtipos}
           selectedItem={subtipo}
           onItemChange={(v) => { setSubtipo(v); setVisibleCount(PAGE_SIZE); }}
           counts={subtipoCounts}
+          fechaCorte={funds[0]?.fechaCorte}
         />
 
         <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">

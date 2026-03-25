@@ -1,11 +1,13 @@
 "use client";
 
+import { formatDate } from "@/lib/format";
 
 interface FundTypeSidebarProps {
   items: string[];
   selectedItem: string;
   onItemChange: (item: string) => void;
   counts: Map<string, number>;
+  fechaCorte?: Date;
 }
 
 /** Strips accents so keyword matching is resilient to API variations. */
@@ -46,6 +48,7 @@ export function FundTypeSidebar({
   selectedItem,
   onItemChange,
   counts,
+  fechaCorte,
 }: FundTypeSidebarProps) {
   const totalCount = Array.from(counts.values()).reduce((a, b) => a + b, 0);
   const sorted = [...items].sort((a, b) => categoryIndex(a) - categoryIndex(b));
@@ -84,6 +87,14 @@ export function FundTypeSidebar({
         <span className="text-sm font-semibold">Todos los Fondos</span>
         <span className="ml-auto text-xs opacity-60 tabular-nums">{totalCount}</span>
       </button>
+
+      {fechaCorte && (
+        <div className="mt-auto pt-4 px-1">
+          <p className="text-[11px] text-on-surface-variant/50 leading-tight">
+            Datos al {formatDate(fechaCorte)}
+          </p>
+        </div>
+      )}
     </aside>
   );
 }

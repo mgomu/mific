@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FeedbackBubble } from "@/components/feedback-bar";
 
 export function Header({
   searchValue = "",
@@ -16,7 +17,7 @@ export function Header({
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-surface-container-lowest backdrop-blur-xl">
-      <div className="flex items-center justify-between px-6 py-3 w-full max-w-screen-2xl mx-auto">
+      <div className="flex items-center justify-between px-6 py-2 w-full max-w-screen-2xl mx-auto">
         <div className="flex items-center gap-8">
           <Link
             href="/"
@@ -41,6 +42,9 @@ export function Header({
             </div>
           )}
         </div>
+      </div>
+      <div className="flex items-center justify-center pb-1">
+        <FeedbackBubble />
       </div>
     </nav>
   );
