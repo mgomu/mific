@@ -64,7 +64,7 @@ export function Header({
           )}
           <Link
             href={compareCount >= 2 ? compareUrl : "#"}
-            className={`bg-gradient-to-r from-primary to-primary-container text-white px-5 py-2 rounded-full font-semibold text-sm hover:opacity-90 hover:translate-y-[-1px] transition-all active:scale-95 ${
+            className={`bg-gradient-to-r from-primary to-primary-container text-on-primary px-5 py-2 rounded-full font-semibold text-sm hover:opacity-90 hover:translate-y-[-1px] transition-all active:scale-95 ${
               compareCount < 2 ? "opacity-50 cursor-not-allowed" : ""
             }`}
             aria-disabled={compareCount < 2}
