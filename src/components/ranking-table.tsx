@@ -29,6 +29,7 @@ function SortHeader({
   currentDir,
   onSort,
   align = "left",
+  className = "",
 }: {
   label: string;
   field: SortField;
@@ -36,13 +37,14 @@ function SortHeader({
   currentDir: SortDir;
   onSort: (f: SortField) => void;
   align?: "left" | "right";
+  className?: string;
 }) {
   const isActive = currentField === field;
   return (
     <th
       className={`px-4 py-3 text-xs font-bold text-on-surface-variant tracking-wide cursor-pointer select-none bg-surface-container-high border-b border-r border-outline-variant/8 last:border-r-0 ${
         align === "right" ? "text-right" : ""
-      }`}
+      } ${className}`}
       onClick={() => onSort(field)}
     >
       <div className={`inline-flex items-center gap-1 ${align === "right" ? "flex-row-reverse" : ""}`}>
@@ -63,10 +65,12 @@ function AdminFilterHeader({
   administradoras,
   selected,
   onChange,
+  className = "",
 }: {
   administradoras: string[];
   selected: string[];
   onChange: (value: string[]) => void;
+  className?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [filterSearch, setFilterSearch] = useState("");
@@ -98,7 +102,7 @@ function AdminFilterHeader({
   }
 
   return (
-    <th className="px-4 py-3 text-xs font-bold text-on-surface-variant tracking-wide relative bg-surface-container-high border-b border-r border-outline-variant/8" ref={ref}>
+    <th className={`px-4 py-3 text-xs font-bold text-on-surface-variant tracking-wide relative bg-surface-container-high border-b border-r border-outline-variant/8 ${className}`} ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
         className={`inline-flex items-center gap-1 cursor-pointer select-none hover:text-on-surface transition-colors ${
@@ -217,19 +221,22 @@ export function RankingTable({
               <span className="sr-only">Select</span>
             </th>
             <SortHeader label="Nombre del fondo" field="nombrePatrimonio" currentField={sortField} currentDir={sortDir} onSort={onSort} />
+            {/* Rentabilidad: 2nd column on mobile */}
+            <SortHeader label="Rentabilidad Efectiva Anual" field="rentabilidadAnual" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
+            {/* Desktop-only columns */}
             <AdminFilterHeader
               administradoras={administradoras}
               selected={selectedAdministradoras}
               onChange={onAdministradorasChange}
+              className="hidden md:table-cell"
             />
             {showType && (
               <th className="px-4 py-3 text-xs font-bold text-on-surface-variant tracking-wide bg-surface-container-high border-b border-r border-outline-variant/8 hidden md:table-cell">
                 Tipo
               </th>
             )}
-            <SortHeader label="Activos Administrados" field="valorFondo" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
-            <SortHeader label="Valor Unidad" field="valorUnidad" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
-            <SortHeader label="Rentabilidad Efectiva Anual" field="rentabilidadAnual" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
+            <SortHeader label="Activos Administrados" field="valorFondo" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" className="hidden md:table-cell" />
+            <SortHeader label="Valor Unidad" field="valorUnidad" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" className="hidden md:table-cell" />
           </tr>
         </thead>
         <tbody>
@@ -257,7 +264,19 @@ export function RankingTable({
                     </span>
                   </Link>
                 </td>
-                <td className="px-4 py-5 border-b border-r border-outline-variant/8">
+                {/* Rentabilidad: 2nd column on mobile */}
+                <td className="px-4 py-5 text-right border-b border-r border-outline-variant/8">
+                  <span className={`font-bold flex items-center gap-1 justify-end ${
+                    fund.rentabilidadAnual >= 0 ? "text-secondary" : "text-error"
+                  }`}>
+                    <span className="material-symbols-outlined text-sm">
+                      {fund.rentabilidadAnual >= 0 ? "trending_up" : "trending_down"}
+                    </span>
+                    {fund.rentabilidadAnual.toFixed(1)}%
+                  </span>
+                </td>
+                {/* Desktop-only columns */}
+                <td className="px-4 py-5 border-b border-r border-outline-variant/8 hidden md:table-cell">
                   <span className="text-sm font-medium text-on-surface">
                     {toSentenceCase(fund.nombreEntidad)}
                   </span>
@@ -267,21 +286,11 @@ export function RankingTable({
                     <FundTypeBadge type={fund.nombreSubtipoPatrimonio} />
                   </td>
                 )}
-                <td className="px-4 py-5 text-right text-sm tabular-nums text-on-surface-variant font-mono border-b border-r border-outline-variant/8">
+                <td className="px-4 py-5 text-right text-sm tabular-nums text-on-surface-variant font-mono border-b border-r border-outline-variant/8 hidden md:table-cell">
                   {formatCompactCOP(fund.valorFondo)}
                 </td>
-                <td className="px-4 py-5 text-right text-sm tabular-nums text-on-surface-variant font-mono border-b border-r border-outline-variant/8">
+                <td className="px-4 py-5 text-right text-sm tabular-nums text-on-surface-variant font-mono border-b border-r border-outline-variant/8 hidden md:table-cell">
                   {formatCOP(fund.valorUnidad)}
-                </td>
-                <td className="px-4 py-5 text-right border-b border-outline-variant/8">
-                  <span className={`font-bold flex items-center gap-1 justify-end ${
-                    fund.rentabilidadAnual >= 0 ? "text-secondary" : "text-error"
-                  }`}>
-                    <span className="material-symbols-outlined text-sm">
-                      {fund.rentabilidadAnual >= 0 ? "trending_up" : "trending_down"}
-                    </span>
-                    {fund.rentabilidadAnual.toFixed(1)}%
-                  </span>
                 </td>
               </tr>
             );
