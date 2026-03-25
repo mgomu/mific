@@ -56,12 +56,14 @@ export function FilterBar({
 }: FilterBarProps) {
   return (
     <section className="flex flex-wrap items-center gap-4 mb-8">
-      <FilterButton
-        label="Tipo de fondo"
-        options={tipos}
-        value={selectedTipo}
-        onChange={onTipoChange}
-      />
+      <div className="lg:hidden">
+        <FilterButton
+          label="Tipo de fondo"
+          options={tipos}
+          value={selectedTipo}
+          onChange={onTipoChange}
+        />
+      </div>
       <FilterButton
         label="Administradora"
         options={admins}
