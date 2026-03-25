@@ -12,7 +12,7 @@ export function MetricCard({
   numericValue?: number;
 }) {
   return (
-    <div className="bg-surface-container-lowest rounded-xl p-5 shadow-ambient">
+    <div className="bg-surface-container-lowest rounded-xl p-5 hover:shadow-ambient-hover transition-shadow">
       <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider mb-2">
         {label}
       </p>
