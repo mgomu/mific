@@ -13,7 +13,7 @@ export function ComparisonBar({ selectedFunds, onRemove }: ComparisonBarProps) {
   const compareUrl = `/comparar?ids=${selectedFunds.map((f) => f.id).join(",")}`;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-outline-variant/20 shadow-ambient-up z-40 transition-transform">
+    <div className="fixed bottom-0 left-0 right-0 bg-surface-container-lowest/70 backdrop-blur-xl border-t border-primary-fixed/20 shadow-ambient-up z-40 transition-transform">
       <div className="max-w-[1440px] mx-auto px-8 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
           {selectedFunds.map((fund) => (
