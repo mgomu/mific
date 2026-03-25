@@ -13,7 +13,7 @@ export function ProfitabilityIndicator({ value }: { value: number }) {
     <div
       className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-bold text-xs ${
         isPositive
-          ? "bg-tertiary-fixed text-tertiary"
+          ? "bg-secondary-fixed/30 text-secondary"
           : "bg-error-container text-error"
       }`}
     >
