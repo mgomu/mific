@@ -78,7 +78,7 @@ function aggregateData(
 }
 
 export function HistoryChart({ data }: { data: FundRecord[] }) {
-  const [metric, setMetric] = useState<Metric>("valorUnidad");
+  const [metric, setMetric] = useState<Metric>("rentabilidadAnual");
   const [period, setPeriod] = useState<Period>("1A");
 
   const filteredData = (() => {

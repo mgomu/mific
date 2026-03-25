@@ -5,7 +5,7 @@ import { FundTypeBadge } from "../fund-type-badge";
 describe("FundTypeBadge", () => {
   it("renders the fund type text", () => {
     render(<FundTypeBadge type="FIC de tipo general" />);
-    expect(screen.getByText("General")).toBeInTheDocument();
+    expect(screen.getByText("Generales")).toBeInTheDocument();
   });
 
   it("renders inmobiliario type", () => {

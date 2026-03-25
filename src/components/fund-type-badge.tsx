@@ -1,6 +1,6 @@
 const TYPE_MAP: Record<string, { label: string; bg: string; text: string }> = {
   general: {
-    label: "General",
+    label: "Generales",
     bg: "bg-surface-container-high",
     text: "text-on-surface",
   },
@@ -27,11 +27,11 @@ const TYPE_MAP: Record<string, { label: string; bg: string; text: string }> = {
 };
 
 function classifyType(type: string): string {
-  const lower = type.toLowerCase();
-  if (lower.includes("inmobiliaria") || lower.includes("inmobiliario")) return "inmobiliario";
-  if (lower.includes("monetario")) return "monetario";
-  if (lower.includes("bursatil") || lower.includes("bursátil")) return "bursátil";
-  if (lower.includes("capital privado")) return "capitalPrivado";
+  const norm = type.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  if (norm.includes("inmobiliaria") || norm.includes("inmobiliario")) return "inmobiliario";
+  if (norm.includes("monetari")) return "monetario";
+  if (norm.includes("bursatil")) return "bursátil";
+  if (norm.includes("capital privado")) return "capitalPrivado";
   return "general";
 }
 

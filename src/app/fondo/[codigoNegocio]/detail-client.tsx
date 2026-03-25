@@ -37,12 +37,6 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
               <span className="material-symbols-outlined">add_circle</span>
               Agregar a comparación
             </Link>
-            <button className="text-white px-8 py-3 rounded-lg font-bold hover:opacity-90 transition-all flex items-center gap-2" style={{ background: "linear-gradient(135deg, #00164e, #00236f)" }}>
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
-                account_balance_wallet
-              </span>
-              Invertir ahora
-            </button>
           </div>
         </header>
 

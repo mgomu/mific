@@ -4,9 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import type { FundRecord } from "@/lib/types";
 import { FundTypeBadge } from "./fund-type-badge";
-import { formatCOP, toSentenceCase } from "@/lib/format";
+import { formatCOP, formatCompactCOP, toSentenceCase } from "@/lib/format";
 
-type SortField = "nombrePatrimonio" | "valorUnidad" | "rentabilidadAnual";
+type SortField = "nombrePatrimonio" | "valorFondo" | "valorUnidad" | "rentabilidadAnual";
 type SortDir = "asc" | "desc";
 
 interface RankingTableProps {
@@ -19,6 +19,7 @@ interface RankingTableProps {
   administradoras: string[];
   selectedAdministradoras: string[];
   onAdministradorasChange: (value: string[]) => void;
+  showType?: boolean;
 }
 
 function SortHeader({
@@ -39,7 +40,7 @@ function SortHeader({
   const isActive = currentField === field;
   return (
     <th
-      className={`px-4 py-4 text-xs font-bold text-on-surface-variant/60 tracking-wider cursor-pointer select-none ${
+      className={`px-4 py-3 text-xs font-bold text-on-surface-variant tracking-wide cursor-pointer select-none bg-surface-container-high border-b border-r border-outline-variant/8 last:border-r-0 ${
         align === "right" ? "text-right" : ""
       }`}
       onClick={() => onSort(field)}
@@ -97,7 +98,7 @@ function AdminFilterHeader({
   }
 
   return (
-    <th className="p-4 text-xs font-bold text-on-surface-variant/60 tracking-wider relative" ref={ref}>
+    <th className="px-4 py-3 text-xs font-bold text-on-surface-variant tracking-wide relative bg-surface-container-high border-b border-r border-outline-variant/8" ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
         className={`inline-flex items-center gap-1 cursor-pointer select-none hover:text-on-surface transition-colors ${
@@ -137,7 +138,7 @@ function AdminFilterHeader({
                 placeholder="Buscar administradora..."
                 value={filterSearch}
                 onChange={(e) => setFilterSearch(e.target.value)}
-                className="w-full text-xs px-3 pl-9 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant/10 outline-none placeholder:text-on-surface-variant/40 text-on-surface focus:border-primary/30 transition-colors"
+                className="w-full text-xs px-3 pl-9 py-2.5 rounded-xl bg-surface-container-high-low border border-outline-variant/10 outline-none placeholder:text-on-surface-variant/40 text-on-surface focus:border-primary/30 transition-colors"
                 autoFocus
               />
             </div>
@@ -152,7 +153,7 @@ function AdminFilterHeader({
                   className={`w-full text-left px-3 py-2.5 text-xs rounded-xl transition-colors flex items-center gap-2.5 ${
                     isChecked
                       ? "bg-primary-fixed/40 text-primary font-semibold"
-                      : "text-on-surface hover:bg-surface-container-low"
+                      : "text-on-surface hover:bg-surface-container-high-low"
                   }`}
                 >
                   <div className={`w-4 h-4 rounded flex-shrink-0 flex items-center justify-center border transition-colors ${
@@ -167,7 +168,7 @@ function AdminFilterHeader({
                   <div className={`w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-[7px] font-bold ${
                     isChecked
                       ? "bg-primary/10 text-primary"
-                      : "bg-surface-container-high text-on-surface-variant/60"
+                      : "bg-surface-container-high-high text-on-surface-variant/60"
                   }`}>
                     {admin.slice(0, 2).toUpperCase()}
                   </div>
@@ -205,13 +206,14 @@ export function RankingTable({
   administradoras,
   selectedAdministradoras,
   onAdministradorasChange,
+  showType = true,
 }: RankingTableProps) {
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-left border-separate border-spacing-y-2">
+      <table className="w-full text-left border-collapse">
         <thead>
           <tr>
-            <th className="px-4 py-4 w-12">
+            <th className="px-4 py-3 w-12 bg-surface-container-high border-b border-r border-outline-variant/8">
               <span className="sr-only">Select</span>
             </th>
             <SortHeader label="Nombre del fondo" field="nombrePatrimonio" currentField={sortField} currentDir={sortDir} onSort={onSort} />
@@ -220,9 +222,12 @@ export function RankingTable({
               selected={selectedAdministradoras}
               onChange={onAdministradorasChange}
             />
-            <th className="px-4 py-4 text-xs font-bold text-on-surface-variant/60 tracking-wider">
-              Tipo
-            </th>
+            {showType && (
+              <th className="px-4 py-3 text-xs font-bold text-on-surface-variant tracking-wide bg-surface-container-high border-b border-r border-outline-variant/8">
+                Tipo
+              </th>
+            )}
+            <SortHeader label="Activos Administrados" field="valorFondo" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
             <SortHeader label="Valor Unidad" field="valorUnidad" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
             <SortHeader label="Rentabilidad Anual" field="rentabilidadAnual" currentField={sortField} currentDir={sortDir} onSort={onSort} align="right" />
           </tr>
@@ -234,9 +239,9 @@ export function RankingTable({
             return (
               <tr
                 key={fund.codigoNegocio}
-                className="bg-surface-container-lowest hover:shadow-ambient transition-all cursor-pointer group"
+                className="bg-surface-container-lowest hover:bg-surface-container-low transition-colors duration-200 ease-out cursor-pointer group"
               >
-                <td className="px-4 py-5 rounded-l-xl" onClick={(e) => e.stopPropagation()}>
+                <td className="px-4 py-5 border-b border-r border-outline-variant/8" onClick={(e) => e.stopPropagation()}>
                   <input
                     type="checkbox"
                     checked={isSelected}
@@ -245,28 +250,30 @@ export function RankingTable({
                     aria-label={`Seleccionar ${fund.nombrePatrimonio}`}
                   />
                 </td>
-                <td className="px-4 py-5">
-                  <Link href={`/fondo/${fund.codigoNegocio}`} className="flex flex-col">
+                <td className="px-4 py-5 border-b border-r border-outline-variant/8">
+                  <Link href={`/fondo/${fund.codigoNegocio}`}>
                     <span className="text-sm font-bold text-primary group-hover:text-primary-container transition-colors">
                       {toSentenceCase(fund.nombrePatrimonio)}
                     </span>
-                    <span className="text-[11px] text-on-surface-variant/60 mt-0.5">
-                      {toSentenceCase(fund.nombreSubtipoPatrimonio)}
-                    </span>
                   </Link>
                 </td>
-                <td className="px-4 py-5">
+                <td className="px-4 py-5 border-b border-r border-outline-variant/8">
                   <span className="text-sm font-medium text-on-surface">
                     {toSentenceCase(fund.nombreEntidad)}
                   </span>
                 </td>
-                <td className="px-4 py-5">
-                  <FundTypeBadge type={fund.nombreSubtipoPatrimonio} />
+                {showType && (
+                  <td className="px-4 py-5 border-b border-r border-outline-variant/8">
+                    <FundTypeBadge type={fund.nombreSubtipoPatrimonio} />
+                  </td>
+                )}
+                <td className="px-4 py-5 text-right text-sm tabular-nums text-on-surface-variant font-mono border-b border-r border-outline-variant/8">
+                  {formatCompactCOP(fund.valorFondo)}
                 </td>
-                <td className="px-4 py-5 text-right text-sm tabular-nums text-on-surface-variant font-mono">
+                <td className="px-4 py-5 text-right text-sm tabular-nums text-on-surface-variant font-mono border-b border-r border-outline-variant/8">
                   {formatCOP(fund.valorUnidad)}
                 </td>
-                <td className="px-4 py-5 text-right rounded-r-xl">
+                <td className="px-4 py-5 text-right border-b border-outline-variant/8">
                   <span className={`font-bold flex items-center gap-1 justify-end ${
                     fund.rentabilidadAnual >= 0 ? "text-secondary" : "text-error"
                   }`}>

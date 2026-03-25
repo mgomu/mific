@@ -117,12 +117,6 @@ export function RankingClient({
           {/* Table Card */}
           <div className="bg-surface-container-lowest rounded-xl shadow-ambient overflow-hidden mb-8">
 
-            <div className="p-4 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <h3 className="font-bold text-primary font-headline">Ranking de Fondos</h3>
-              </div>
-            </div>
-
             {sorted.length === 0 ? (
               <div className="text-center py-20">
                 <span className="material-symbols-outlined text-6xl text-on-surface-variant/40 mb-4">
@@ -147,6 +141,7 @@ export function RankingClient({
                   administradoras={administradoras}
                   selectedAdministradoras={administradoras_sel}
                   onAdministradorasChange={(v) => { setAdministradoras_sel(v); setVisibleCount(PAGE_SIZE); }}
+                  showType={!subtipo}
                 />
 
                 {visibleCount < sorted.length && (
