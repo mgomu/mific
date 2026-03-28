@@ -14,7 +14,7 @@ export function ComparisonBar({ selectedFunds, onRemove }: ComparisonBarProps) {
   const compareUrl = `/comparar?ids=${selectedFunds.map((f) => f.id).join(",")}`;
 
   return (
-    <div className="fixed bottom-0 left-0 w-full flex justify-center items-center pb-4 md:pb-8 px-3 md:px-6 z-[60]">
+    <div className="hidden md:flex fixed bottom-0 left-0 w-full justify-center items-center pb-4 md:pb-8 px-3 md:px-6 z-[60]">
       <div className="bg-white/80 backdrop-blur-xl shadow-2xl rounded-2xl md:rounded-full py-2.5 md:py-3 px-4 md:px-6 flex items-center gap-2 md:gap-3 max-w-[700px] w-full md:w-fit border border-primary/10">
         <span className="text-xs font-bold text-primary whitespace-nowrap">
           ({selectedFunds.length})

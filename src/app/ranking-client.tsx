@@ -6,6 +6,8 @@ import { Header } from "@/components/header";
 import { FundTypeSidebar } from "@/components/fund-type-sidebar";
 import { RankingTable, type SortField, type SortDir } from "@/components/ranking-table";
 import { ComparisonBar } from "@/components/comparison-bar";
+import { MobileRankingList } from "@/components/mobile-ranking-list";
+import { MobileComparisonCard } from "@/components/mobile-comparison-card";
 import { formatDate, toSentenceCase, simplifyFundName } from "@/lib/format";
 
 const PAGE_SIZE = 50;
@@ -181,18 +183,30 @@ export function RankingClient({
               </div>
             ) : (
               <>
-                <RankingTable
-                  funds={visible}
-                  selectedIds={selectedIds}
-                  onToggleSelect={toggleSelect}
-                  sortField={sortField}
-                  sortDir={sortDir}
-                  onSort={handleSort}
-                  administradoras={administradoras}
-                  selectedAdministradoras={administradoras_sel}
-                  onAdministradorasChange={(v) => { setAdministradoras_sel(v); setVisibleCount(PAGE_SIZE); }}
-                  showType={!subtipo}
-                />
+                {/* Desktop table */}
+                <div className="hidden md:block">
+                  <RankingTable
+                    funds={visible}
+                    selectedIds={selectedIds}
+                    onToggleSelect={toggleSelect}
+                    sortField={sortField}
+                    sortDir={sortDir}
+                    onSort={handleSort}
+                    administradoras={administradoras}
+                    selectedAdministradoras={administradoras_sel}
+                    onAdministradorasChange={(v) => { setAdministradoras_sel(v); setVisibleCount(PAGE_SIZE); }}
+                    showType={!subtipo}
+                  />
+                </div>
+
+                {/* Mobile list */}
+                <div className="md:hidden">
+                  <MobileRankingList
+                    funds={visible}
+                    selectedIds={selectedIds}
+                    onToggleSelect={toggleSelect}
+                  />
+                </div>
 
                 {visibleCount < sorted.length && (
                   <div className="p-6 flex items-center justify-center">
@@ -212,6 +226,10 @@ export function RankingClient({
       </div>
 
       <ComparisonBar
+        selectedFunds={selectedFunds}
+        onRemove={(id) => toggleSelect(id)}
+      />
+      <MobileComparisonCard
         selectedFunds={selectedFunds}
         onRemove={(id) => toggleSelect(id)}
       />
