@@ -8,20 +8,18 @@ interface MobileRankingListProps {
   funds: FundRecord[];
   selectedIds: string[];
   onToggleSelect: (id: string) => void;
-  pageOffset?: number;
 }
 
 export function MobileRankingList({
   funds,
   selectedIds,
   onToggleSelect,
-  pageOffset = 0,
 }: MobileRankingListProps) {
   return (
     <div className="space-y-1">
       {/* Column headers */}
       <div className="grid grid-cols-12 px-4 py-2 text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60">
-        <div className="col-span-1">#</div>
+        <div className="col-span-1"><span className="sr-only">Seleccionar</span></div>
         <div className="col-span-6">Nombre del Fondo</div>
         <div className="col-span-2 text-right">Rent.</div>
         <div className="col-span-3 text-right">AUM</div>
@@ -29,7 +27,6 @@ export function MobileRankingList({
 
       {funds.map((fund, idx) => {
         const isSelected = selectedIds.includes(fund.codigoNegocio);
-        const rank = String(pageOffset + idx + 1).padStart(2, "0");
 
         return (
           <div
@@ -40,24 +37,16 @@ export function MobileRankingList({
                 : "bg-surface-container-low/30"
             } ${isSelected ? "ring-1 ring-primary/20" : ""}`}
           >
-            {/* Rank / Select toggle */}
-            <button
-              className="col-span-1 text-left"
-              onClick={() => onToggleSelect(fund.codigoNegocio)}
-              aria-label={`Seleccionar ${fund.nombrePatrimonio}`}
-            >
-              {isSelected ? (
-                <span className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                  <span className="material-symbols-outlined text-on-primary text-xs">
-                    check
-                  </span>
-                </span>
-              ) : (
-                <span className="font-headline font-extrabold text-outline/40 italic text-sm">
-                  {rank}
-                </span>
-              )}
-            </button>
+            {/* Checkbox */}
+            <div className="col-span-1 flex items-center">
+              <input
+                type="checkbox"
+                checked={isSelected}
+                onChange={() => onToggleSelect(fund.codigoNegocio)}
+                className="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4"
+                aria-label={`Seleccionar ${fund.nombrePatrimonio}`}
+              />
+            </div>
 
             {/* Fund name + admin entity */}
             <div className="col-span-5 pr-2 min-w-0">
