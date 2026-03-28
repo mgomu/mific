@@ -6,7 +6,7 @@ import { Header } from "@/components/header";
 import { FundTypeSidebar } from "@/components/fund-type-sidebar";
 import { RankingTable, type SortField, type SortDir } from "@/components/ranking-table";
 import { ComparisonBar } from "@/components/comparison-bar";
-import { formatDate, toSentenceCase } from "@/lib/format";
+import { formatDate, toSentenceCase, simplifyFundName } from "@/lib/format";
 
 const PAGE_SIZE = 50;
 
@@ -66,6 +66,7 @@ export function RankingClient({
       result = result.filter(
         (f) =>
           f.nombrePatrimonio.toLowerCase().includes(q) ||
+          simplifyFundName(f.nombrePatrimonio).toLowerCase().includes(q) ||
           f.nombreEntidad.toLowerCase().includes(q)
       );
     }
@@ -112,7 +113,7 @@ export function RankingClient({
   const selectedFunds = selectedIds
     .map((id) => {
       const fund = funds.find((f) => f.codigoNegocio === id);
-      return fund ? { id, name: toSentenceCase(fund.nombrePatrimonio) } : null;
+      return fund ? { id, name: toSentenceCase(simplifyFundName(fund.nombrePatrimonio)) } : null;
     })
     .filter(Boolean) as { id: string; name: string }[];
 

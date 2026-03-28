@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import type { FundRecord } from "@/lib/types";
 import { FundTypeBadge } from "./fund-type-badge";
-import { formatCOP, formatCompactCOP, toSentenceCase } from "@/lib/format";
+import { formatCOP, formatCompactCOP, toSentenceCase, simplifyFundName } from "@/lib/format";
 
 type SortField = "nombrePatrimonio" | "valorFondo" | "valorUnidad" | "rentabilidadAnual";
 type SortDir = "asc" | "desc";
@@ -260,7 +260,7 @@ export function RankingTable({
                 <td className="px-4 py-5 border-b border-r border-outline-variant/8">
                   <Link href={`/fondo/${fund.codigoNegocio}`}>
                     <span className="text-sm font-bold text-primary group-hover:text-primary-container transition-colors">
-                      {toSentenceCase(fund.nombrePatrimonio)}
+                      {toSentenceCase(simplifyFundName(fund.nombrePatrimonio))}
                     </span>
                   </Link>
                 </td>

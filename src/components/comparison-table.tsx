@@ -1,6 +1,6 @@
 import type { FundRecord } from "@/lib/types";
 import { ProfitabilityIndicator } from "./profitability-indicator";
-import { formatCOP, formatNumber, formatCompactCOP, toSentenceCase } from "@/lib/format";
+import { formatCOP, formatNumber, formatCompactCOP, toSentenceCase, simplifyFundName } from "@/lib/format";
 import { CHART_COLORS } from "@/lib/chart-colors";
 
 interface ComparisonTableProps {
@@ -80,7 +80,7 @@ export function ComparisonTable({ funds }: ComparisonTableProps) {
                     <div className="text-left">
                       <p className="text-xs font-bold text-primary">{toSentenceCase(fund.nombreEntidad)}</p>
                       <p className="text-sm font-bold text-on-surface truncate max-w-[140px]">
-                        {toSentenceCase(fund.nombrePatrimonio)}
+                        {toSentenceCase(simplifyFundName(fund.nombrePatrimonio))}
                       </p>
                     </div>
                   </div>

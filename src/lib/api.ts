@@ -99,6 +99,16 @@ export async function fetchFundHistory(
   return mergeDuplicateRecords(records.map(parseRecord));
 }
 
+export async function fetchFundActiveSince(
+  codigoNegocio: string
+): Promise<Date | null> {
+  const records = await sodaFetch(
+    `$select=fecha_corte&$where=codigo_negocio='${codigoNegocio}'&$order=fecha_corte ASC&$limit=1`
+  );
+  if (records.length === 0) return null;
+  return new Date(records[0].fecha_corte);
+}
+
 export async function fetchFundsComparison(
   codigos: string[],
   days = 365

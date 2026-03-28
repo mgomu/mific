@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { FundRecord } from "@/lib/types";
 import { Header } from "@/components/header";
-import { toSentenceCase } from "@/lib/format";
+import { toSentenceCase, simplifyFundName } from "@/lib/format";
 import { mergeDuplicateRecords } from "@/lib/api";
 import { ComparisonChart } from "@/components/comparison-chart";
 import { ComparisonTable } from "@/components/comparison-table";
@@ -222,7 +222,7 @@ export function CompararClient() {
                               {toSentenceCase(fundEntities.get(id) ?? "")}
                             </p>
                             <p className="text-[13px] font-bold text-on-surface leading-snug mt-0.5 line-clamp-2">
-                              {toSentenceCase((fundNames.get(id) ?? id).slice(0, 40))}
+                              {toSentenceCase(simplifyFundName(fundNames.get(id) ?? id))}
                             </p>
                           </div>
                           <button

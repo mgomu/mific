@@ -6,6 +6,7 @@ import {
   formatCompactCOP,
   formatNumber,
   toSentenceCase,
+  simplifyFundName,
 } from "./format";
 import { registerFonts } from "./pdf-fonts";
 
@@ -262,7 +263,7 @@ export async function generateComparisonPDF({
   const cardData = codigos.map((codigo, i) => {
     const fund = latestPerFund.find((f) => f.codigoNegocio === codigo);
     const entity = toSentenceCase(fundEntities.get(codigo) ?? "");
-    const name = toSentenceCase(fundNames.get(codigo) ?? codigo);
+    const name = toSentenceCase(simplifyFundName(fundNames.get(codigo) ?? codigo));
 
     doc.setFont("Manrope", "bold");
     doc.setFontSize(7);
@@ -371,7 +372,7 @@ export async function generateComparisonPDF({
     doc.setFont("Inter", "bold");
     doc.setTextColor(...C.onSurface);
     const nm = toSentenceCase(
-      (fundNames.get(codigo) ?? codigo).slice(0, 26)
+      simplifyFundName(fundNames.get(codigo) ?? codigo).slice(0, 26)
     );
     doc.text(nm, legendX + 4, y + 2);
     legendX += doc.getTextWidth(nm) + 10;
@@ -474,7 +475,7 @@ export async function generateComparisonPDF({
     doc.setFontSize(5.5);
     doc.setTextColor(...C.onSurface);
     doc.text(
-      toSentenceCase(fund.nombrePatrimonio).slice(0, 20),
+      toSentenceCase(simplifyFundName(fund.nombrePatrimonio)).slice(0, 20),
       x + 5,
       y + 8
     );

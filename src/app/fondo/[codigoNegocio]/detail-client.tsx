@@ -5,9 +5,9 @@ import Link from "next/link";
 import type { FundRecord } from "@/lib/types";
 import { Header } from "@/components/header";
 import { HistoryChart } from "@/components/history-chart";
-import { formatNumber, formatCompactCOP, formatDate, formatCOP, toSentenceCase } from "@/lib/format";
+import { formatNumber, formatCompactCOP, formatDate, formatCOP, toSentenceCase, simplifyFundName } from "@/lib/format";
 
-export function DetailClient({ history }: { history: FundRecord[] }) {
+export function DetailClient({ history, activeSince }: { history: FundRecord[]; activeSince: string | null }) {
   const [compareOpen, setCompareOpen] = useState(false);
   const latest = history[history.length - 1];
 
@@ -26,7 +26,7 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
               <span className="text-sm font-medium">Volver a fondos</span>
             </Link>
             <h1 className="text-2xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-primary font-headline">
-              {toSentenceCase(latest.nombrePatrimonio)}
+              {toSentenceCase(simplifyFundName(latest.nombrePatrimonio))}
             </h1>
           </div>
           <div className="flex gap-3">
@@ -129,6 +129,12 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
                   <span className="text-on-surface-variant">Subtipo</span>
                   <span className="font-bold text-on-surface">{toSentenceCase(latest.nombreSubtipoPatrimonio)}</span>
                 </li>
+                {activeSince && (
+                  <li className="flex justify-between items-center text-sm">
+                    <span className="text-on-surface-variant">Activo desde</span>
+                    <span className="font-bold text-on-surface">{formatDate(new Date(activeSince))}</span>
+                  </li>
+                )}
                 <li className="flex justify-between items-center text-sm">
                   <span className="text-on-surface-variant">Inversionistas</span>
                   <span className="font-bold text-on-surface">{formatNumber(latest.numeroInversionistas)}</span>

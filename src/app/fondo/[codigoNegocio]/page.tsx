@@ -1,4 +1,4 @@
-import { fetchFundHistory } from "@/lib/api";
+import { fetchFundHistory, fetchFundActiveSince } from "@/lib/api";
 import { DetailClient } from "./detail-client";
 import { notFound } from "next/navigation";
 
@@ -10,9 +10,12 @@ export default async function FundDetailPage({
   params: Promise<{ codigoNegocio: string }>;
 }) {
   const { codigoNegocio } = await params;
-  const history = await fetchFundHistory(codigoNegocio);
+  const [history, activeSince] = await Promise.all([
+    fetchFundHistory(codigoNegocio),
+    fetchFundActiveSince(codigoNegocio),
+  ]);
 
   if (history.length === 0) notFound();
 
-  return <DetailClient history={history} />;
+  return <DetailClient history={history} activeSince={activeSince?.toISOString() ?? null} />;
 }

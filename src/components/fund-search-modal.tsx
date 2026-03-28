@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { FundRecord } from "@/lib/types";
+import { toSentenceCase, simplifyFundName } from "@/lib/format";
 
 interface FundSearchModalProps {
   isOpen: boolean;
@@ -40,6 +41,7 @@ export function FundSearchModal({
       (f) =>
         !excludeIds.includes(f.codigoNegocio) &&
         (f.nombrePatrimonio.toLowerCase().includes(q) ||
+          simplifyFundName(f.nombrePatrimonio).toLowerCase().includes(q) ||
           f.nombreEntidad.toLowerCase().includes(q))
     )
     .slice(0, 8);
@@ -80,7 +82,7 @@ export function FundSearchModal({
               className="w-full text-left px-4 py-3 rounded-lg hover:bg-surface-container-low transition-colors"
             >
               <p className="text-sm font-medium text-on-surface">
-                {fund.nombrePatrimonio}
+                {toSentenceCase(simplifyFundName(fund.nombrePatrimonio))}
               </p>
               <p className="text-xs text-on-surface-variant">
                 {fund.nombreEntidad}
