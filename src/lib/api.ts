@@ -63,7 +63,10 @@ async function sodaFetch(query: string): Promise<SodaRawRecord[]> {
   const headers: HeadersInit = {};
   if (APP_TOKEN) headers["X-App-Token"] = APP_TOKEN;
 
-  const res = await fetch(url, { headers });
+  const res = await fetch(url, {
+    headers,
+    next: { revalidate: 86400 },
+  });
   if (!res.ok) throw new Error(`SODA API error: ${res.status}`);
   return res.json();
 }

@@ -17,8 +17,7 @@ function normalize(s: string): string {
 
 /** Display order, label, and icon for each fund category (matched by keyword). */
 const CATEGORIES: { keyword: string; label: string; icon: string }[] = [
-  { keyword: "GENERAL", label: "FIC Generales", icon: "trending_flat" },
-  { keyword: "MONETARI", label: "FIC Money Market", icon: "account_balance" },
+  { keyword: "GENERAL", label: "FICs", icon: "trending_flat" },
   { keyword: "BURSATIL", label: "FIC Bursátiles", icon: "show_chart" },
   { keyword: "INMOBILIARIA", label: "FIC Inmobiliarios", icon: "apartment" },
   { keyword: "CAPITAL PRIVADO", label: "Fondos de Capital Privado", icon: "public" },

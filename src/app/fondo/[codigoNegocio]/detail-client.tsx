@@ -53,7 +53,7 @@ export function DetailClient({ history }: { history: FundRecord[] }) {
               </span>
               <span className="text-xs font-bold text-secondary flex items-center">
                 <span className="material-symbols-outlined text-xs">arrow_upward</span>
-                {latest.rentabilidadDiaria.toFixed(2)}%
+                {((Math.pow(1 + latest.rentabilidadDiaria / 100, 1 / 365) - 1) * 100).toFixed(4)}%
               </span>
             </div>
             <p className="text-xs text-on-surface-variant mt-2">

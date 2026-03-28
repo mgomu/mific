@@ -10,11 +10,25 @@ import { formatDate, toSentenceCase } from "@/lib/format";
 
 const PAGE_SIZE = 50;
 
+/** Merge Money Market funds into the General FIC category. */
+function normalizeFunds(raw: FundRecord[]): FundRecord[] {
+  const generalSubtipo = raw.find((f) =>
+    f.nombreSubtipoPatrimonio.toUpperCase().includes("GENERAL")
+  )?.nombreSubtipoPatrimonio;
+  if (!generalSubtipo) return raw;
+  return raw.map((f) =>
+    f.nombreSubtipoPatrimonio.toUpperCase().includes("MONETARI")
+      ? { ...f, nombreSubtipoPatrimonio: generalSubtipo }
+      : f
+  );
+}
+
 export function RankingClient({
-  funds,
+  funds: rawFunds,
 }: {
   funds: FundRecord[];
 }) {
+  const funds = useMemo(() => normalizeFunds(rawFunds), [rawFunds]);
   const [search, setSearch] = useState("");
   const defaultSubtipo = useMemo(
     () => funds.find((f) => f.nombreSubtipoPatrimonio.toUpperCase().includes("GENERAL"))?.nombreSubtipoPatrimonio ?? "",

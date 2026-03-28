@@ -27,15 +27,27 @@ const ROWS: Row[] = [
   },
   {
     label: "Rentabilidad Diaria",
-    render: (f) => <ProfitabilityIndicator value={f.rentabilidadDiaria} />,
+    render: (f) => {
+      const ea = f.rentabilidadDiaria / 100;
+      const daily = (Math.pow(1 + ea, 1 / 365) - 1) * 100;
+      return <ProfitabilityIndicator value={daily} decimals={4} />;
+    },
   },
   {
     label: "Rentabilidad Mensual",
-    render: (f) => <ProfitabilityIndicator value={f.rentabilidadMensual} />,
+    render: (f) => {
+      const ea = f.rentabilidadMensual / 100;
+      const monthly = (Math.pow(1 + ea, 1 / 12) - 1) * 100;
+      return <ProfitabilityIndicator value={monthly} />;
+    },
   },
   {
     label: "Rentabilidad Semestral",
-    render: (f) => <ProfitabilityIndicator value={f.rentabilidadSemestral} />,
+    render: (f) => {
+      const ea = f.rentabilidadSemestral / 100;
+      const semestral = (Math.pow(1 + ea, 1 / 2) - 1) * 100;
+      return <ProfitabilityIndicator value={semestral} />;
+    },
   },
   {
     label: "Rentabilidad Efectiva Anual",

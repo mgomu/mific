@@ -113,10 +113,6 @@ export function ComparisonChart({ fundData, fundNames }: ComparisonChartProps) {
               </button>
             ))}
           </div>
-          <button className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors">
-            <span className="material-symbols-outlined text-sm">calendar_today</span>
-            Personalizado
-          </button>
         </div>
       </div>
 

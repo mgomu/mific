@@ -1,8 +1,8 @@
-export function ProfitabilityIndicator({ value }: { value: number }) {
+export function ProfitabilityIndicator({ value, decimals = 2 }: { value: number; decimals?: number }) {
   if (value === 0 || isNaN(value)) {
     return (
       <span className="text-on-surface-variant text-sm tabular-nums">
-        {Math.abs(value).toFixed(2)}%
+        {Math.abs(value).toFixed(decimals)}%
       </span>
     );
   }
@@ -20,7 +20,7 @@ export function ProfitabilityIndicator({ value }: { value: number }) {
       <span className="material-symbols-outlined text-xs">
         {isPositive ? "north_east" : "south_west"}
       </span>
-      {Math.abs(value).toFixed(2)}%
+      {Math.abs(value).toFixed(decimals)}%
     </div>
   );
 }

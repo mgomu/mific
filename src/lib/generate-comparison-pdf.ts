@@ -402,17 +402,17 @@ export async function generateComparisonPDF({
     },
     {
       label: "Rent. Diaria",
-      getValue: (f) => String(f.rentabilidadDiaria),
+      getValue: (f) => String((Math.pow(1 + f.rentabilidadDiaria / 100, 1 / 365) - 1) * 100),
       isPill: true,
     },
     {
       label: "Rent. Mensual",
-      getValue: (f) => String(f.rentabilidadMensual),
+      getValue: (f) => String((Math.pow(1 + f.rentabilidadMensual / 100, 1 / 12) - 1) * 100),
       isPill: true,
     },
     {
       label: "Rent. Semestral",
-      getValue: (f) => String(f.rentabilidadSemestral),
+      getValue: (f) => String((Math.pow(1 + f.rentabilidadSemestral / 100, 1 / 2) - 1) * 100),
       isPill: true,
     },
     {
