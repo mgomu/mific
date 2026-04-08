@@ -11,6 +11,7 @@
     "test:run": "vitest run"
   },
   "dependencies": {
+    "@amplitude/unified": "^1.0.15",
     "@vercel/analytics": "^2.0.1",
     "html2canvas-pro": "^2.0.2",
     "jspdf": "^4.2.1",
