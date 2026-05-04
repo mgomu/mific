@@ -125,17 +125,22 @@ export async function fetchLatestFunds(): Promise<FundRecord[]> {
   if (all.length >= 50) return all.map(dbRowToFundRecord);
 
   // Fallback to Socrata (single latest date only)
-  const dateRecords = await sodaFetch(
-    "$select=fecha_corte&$order=fecha_corte DESC&$limit=1"
-  );
-  if (dateRecords.length === 0) return [];
+  try {
+    const dateRecords = await sodaFetch(
+      "$select=fecha_corte&$order=fecha_corte DESC&$limit=1"
+    );
+    if (dateRecords.length === 0) return all.map(dbRowToFundRecord);
 
-  const latestDate = dateRecords[0].fecha_corte.split("T")[0];
-  const records = await sodaFetch(
-    `$where=fecha_corte='${latestDate}'&$limit=5000`
-  );
-  const parsed = records.map(parseRecord);
-  return mergeDuplicateRecords(parsed);
+    const latestDate = dateRecords[0].fecha_corte.split("T")[0];
+    const records = await sodaFetch(
+      `$where=fecha_corte='${latestDate}'&$limit=5000`
+    );
+    const parsed = records.map(parseRecord);
+    return mergeDuplicateRecords(parsed);
+  } catch (err) {
+    console.error("[fetchLatestFunds] Socrata fallback failed:", err);
+    return all.map(dbRowToFundRecord);
+  }
 }
 
 export async function fetchFundHistory(
