@@ -5,7 +5,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import type { FundRecord } from "@/lib/types";
 import { Header } from "@/components/header";
 import { toSentenceCase, simplifyFundName } from "@/lib/format";
-import { mergeDuplicateRecords } from "@/lib/api";
+import { mergeDuplicateRecords, dbRowToFundRecord } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 import { ComparisonChart } from "@/components/comparison-chart";
 import { ComparisonTable } from "@/components/comparison-table";
 import { FundSearchModal } from "@/components/fund-search-modal";
@@ -35,35 +36,48 @@ export function CompararClient() {
       const since = new Date();
       since.setDate(since.getDate() - 365);
       const sinceStr = since.toISOString().split("T")[0];
-      const inClause = codigos.map((c) => `'${c}'`).join(",");
 
-      const url = `https://www.datos.gov.co/resource/qhpu-8ixx.json?$where=codigo_negocio in (${inClause}) AND fecha_corte>='${sinceStr}'&$order=fecha_corte ASC&$limit=50000`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("API error");
-      const raw = await res.json();
+      let records: FundRecord[] = [];
 
-      const parsed = raw.map((r: any) => ({
-        codigoNegocio: r.codigo_negocio,
-        nombreEntidad: r.nombre_entidad,
-        nombrePatrimonio: r.nombre_patrimonio,
-        nombreTipoPatrimonio: r.nombre_tipo_patrimonio,
-        nombreSubtipoPatrimonio: r.nombre_subtipo_patrimonio,
-        valorUnidad: parseFloat(r.valor_unidad_operaciones) || 0,
-        valorFondo: parseFloat(r.valor_fondo_cierre_dia_t) || 0,
-        numeroInversionistas: parseInt(r.numero_inversionistas, 10) || 0,
-        rentabilidadDiaria: parseFloat(r.rentabilidad_diaria) || 0,
-        rentabilidadMensual: parseFloat(r.rentabilidad_mensual) || 0,
-        rentabilidadSemestral: parseFloat(r.rentabilidad_semestral) || 0,
-        rentabilidadAnual: parseFloat(r.rentabilidad_anual) || 0,
-        fechaCorte: new Date(r.fecha_corte),
-        rendimientosAbonados: parseFloat(r.rendimientos_abonados) || 0,
-        aportesRecibidos: parseFloat(r.aportes_recibidos) || 0,
-        retirosRedenciones: parseFloat(r.retiros_redenciones) || 0,
-      } as FundRecord));
-      const merged = mergeDuplicateRecords(parsed);
+      // Try Supabase first
+      const { data, error } = await supabase
+        .from("fund_records")
+        .select("*")
+        .in("codigo_negocio", codigos)
+        .gte("fecha_corte", sinceStr)
+        .order("fecha_corte", { ascending: true });
+
+      if (!error && data && data.length > 0) {
+        records = data.map(dbRowToFundRecord);
+      } else {
+        // Fallback to Socrata API
+        const inClause = codigos.map((c) => `'${c}'`).join(",");
+        const url = `https://www.datos.gov.co/resource/qhpu-8ixx.json?$where=codigo_negocio in (${inClause}) AND fecha_corte>='${sinceStr}'&$order=fecha_corte ASC&$limit=50000`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("API error");
+        const raw = await res.json();
+        records = mergeDuplicateRecords(raw.map((r: any) => ({
+          codigoNegocio: r.codigo_negocio,
+          nombreEntidad: r.nombre_entidad,
+          nombrePatrimonio: r.nombre_patrimonio,
+          nombreTipoPatrimonio: r.nombre_tipo_patrimonio,
+          nombreSubtipoPatrimonio: r.nombre_subtipo_patrimonio,
+          valorUnidad: parseFloat(r.valor_unidad_operaciones) || 0,
+          valorFondo: parseFloat(r.valor_fondo_cierre_dia_t) || 0,
+          numeroInversionistas: parseInt(r.numero_inversionistas, 10) || 0,
+          rentabilidadDiaria: parseFloat(r.rentabilidad_diaria) || 0,
+          rentabilidadMensual: parseFloat(r.rentabilidad_mensual) || 0,
+          rentabilidadSemestral: parseFloat(r.rentabilidad_semestral) || 0,
+          rentabilidadAnual: parseFloat(r.rentabilidad_anual) || 0,
+          fechaCorte: new Date(r.fecha_corte),
+          rendimientosAbonados: parseFloat(r.rendimientos_abonados) || 0,
+          aportesRecibidos: parseFloat(r.aportes_recibidos) || 0,
+          retirosRedenciones: parseFloat(r.retiros_redenciones) || 0,
+        } as FundRecord)));
+      }
 
       const grouped = new Map<string, FundRecord[]>();
-      for (const record of merged) {
+      for (const record of records) {
         if (!grouped.has(record.codigoNegocio)) {
           grouped.set(record.codigoNegocio, []);
         }
@@ -84,6 +98,27 @@ export function CompararClient() {
   useEffect(() => {
     async function fetchAll() {
       try {
+        // Try Supabase first
+        const { data: dateRow } = await supabase
+          .from("fund_records")
+          .select("fecha_corte")
+          .order("fecha_corte", { ascending: false })
+          .limit(1);
+
+        if (dateRow && dateRow.length > 0) {
+          const latestDate = dateRow[0].fecha_corte;
+          const { data, error } = await supabase
+            .from("fund_records")
+            .select("*")
+            .eq("fecha_corte", latestDate);
+
+          if (!error && data && data.length > 0) {
+            setAllFunds(data.map(dbRowToFundRecord));
+            return;
+          }
+        }
+
+        // Fallback to Socrata API
         const dateRes = await fetch(
           "https://www.datos.gov.co/resource/qhpu-8ixx.json?$select=fecha_corte&$order=fecha_corte DESC&$limit=1"
         );
