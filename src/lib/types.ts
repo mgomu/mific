@@ -17,6 +17,24 @@ export interface FundRecord {
   retirosRedenciones: number;
 }
 
+export interface FundCategory {
+  codigo_negocio: string;
+  nombre_patrimonio: string;
+  nombre_entidad: string;
+  asset_class: 'renta_fija' | 'renta_variable' | 'alternativos' | 'otros' | null;
+  classified_at: string | null;
+  source_url: string | null;
+}
+
+export type AssetClass = 'renta_fija' | 'renta_variable' | 'alternativos' | 'otros';
+
+export const ASSET_CLASS_LABELS: Record<AssetClass, string> = {
+  renta_fija: 'Renta Fija',
+  renta_variable: 'Renta Variable',
+  alternativos: 'Alternativos',
+  otros: 'Otros',
+};
+
 export interface SodaRawRecord {
   codigo_negocio: string;
   nombre_entidad: string;
