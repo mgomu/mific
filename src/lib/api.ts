@@ -124,19 +124,27 @@ export async function fetchLatestFunds(): Promise<FundRecord[]> {
   // populated yet and we should fall through to Socrata.
   if (all.length >= 50) return all.map(dbRowToFundRecord);
 
-  // Fallback to Socrata (single latest date only)
+  // Fallback to Socrata — fetch last 30 days, keep latest record per fund
   try {
-    const dateRecords = await sodaFetch(
-      "$select=fecha_corte&$order=fecha_corte DESC&$limit=1"
-    );
-    if (dateRecords.length === 0) return all.map(dbRowToFundRecord);
-
-    const latestDate = dateRecords[0].fecha_corte.split("T")[0];
+    const since = new Date();
+    since.setDate(since.getDate() - 30);
+    const sinceStr = since.toISOString().split("T")[0];
     const records = await sodaFetch(
-      `$where=fecha_corte='${latestDate}'&$limit=5000`
+      `$where=fecha_corte>='${sinceStr}'&$order=fecha_corte DESC&$limit=5000`
     );
+    if (records.length === 0) return all.map(dbRowToFundRecord);
+
     const parsed = records.map(parseRecord);
-    return mergeDuplicateRecords(parsed);
+    const merged = mergeDuplicateRecords(parsed);
+    // Keep only the latest date per fund
+    const latestByFund = new Map<string, FundRecord>();
+    for (const r of merged) {
+      const existing = latestByFund.get(r.codigoNegocio);
+      if (!existing || r.fechaCorte > existing.fechaCorte) {
+        latestByFund.set(r.codigoNegocio, r);
+      }
+    }
+    return Array.from(latestByFund.values());
   } catch (err) {
     console.error("[fetchLatestFunds] Socrata fallback failed:", err);
     return all.map(dbRowToFundRecord);
